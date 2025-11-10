@@ -103,7 +103,7 @@ const ModernDashboard = () => {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="dashboard-grid grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Harvest Volume Chart */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -112,7 +112,7 @@ const ModernDashboard = () => {
           className="bg-card border border-border rounded-lg p-6"
         >
           <h3 className="text-lg font-semibold text-foreground mb-6">Harvest Volume by Month</h3>
-          <div className="h-80">
+          <div className="h-80 w-full chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={harvestData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -140,7 +140,7 @@ const ModernDashboard = () => {
           className="bg-card border border-border rounded-lg p-6"
         >
           <h3 className="text-lg font-semibold text-foreground mb-6">Quality Test Results</h3>
-          <div className="h-80 flex items-center justify-center">
+          <div className="h-80 w-full chart-container flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -189,7 +189,7 @@ const ModernDashboard = () => {
         className="bg-card border border-border rounded-lg p-6"
       >
         <h3 className="text-lg font-semibold text-foreground mb-6">Regional Performance</h3>
-        <div className="h-80">
+        <div className="h-80 w-full chart-container">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={regionData} layout="horizontal">
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />

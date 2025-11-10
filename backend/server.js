@@ -55,6 +55,25 @@ const users = [
   { username: 'demo', password: 'demo123' }
 ];
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'HerbalTrace Backend API',
+    version: '1.0.0',
+    endpoints: {
+      auth: {
+        login: 'POST /api/auth/login',
+        signup: 'POST /api/auth/signup'
+      },
+      products: 'GET /api/products/:batchId',
+      collection: 'GET /api/collection, POST /api/collection',
+      qualitytest: 'GET /api/qualitytest',
+      processingstep: 'GET /api/processingstep',
+      recall: 'POST /api/recall'
+    }
+  });
+});
+
 app.get('/api/products/:batchId', (req, res) => {
   const { batchId } = req.params;
   const product = products[batchId];
@@ -105,5 +124,5 @@ app.post('/api/recall', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Traceherbs backend running on http://localhost:${PORT}`);
+  console.log(`HerbalTrace backend running on http://localhost:${PORT}`);
 });

@@ -353,7 +353,7 @@ function AdminPanel() {
       <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h6" color="error" display="flex" alignItems="center">
-            <AlertTriangleIcon size={20} sx={{ mr: 1 }} /> Batch Recall Simulation
+            <WarningIcon sx={{ mr: 1 }} /> Batch Recall Simulation
           </Typography>
         </Box>
         <Box display="flex" flexWrap="wrap" gap={2}>

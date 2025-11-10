@@ -83,7 +83,7 @@ const Signup = ({ onSignup, isLoading = false }) => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4">
             <Leaf className="h-8 w-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Join TraceHerb</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Join HerbalTrace</h1>
           <p className="text-muted-foreground">Create your account to start tracking herbs</p>
         </div>
 

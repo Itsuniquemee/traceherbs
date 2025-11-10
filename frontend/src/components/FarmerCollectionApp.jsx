@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
+  MapPin, 
   Wifi, 
   WifiOff, 
   Upload, 
+  Download, 
   CheckCircle, 
   AlertTriangle,
   Leaf,
   Smartphone,
-  RefreshCcw,
+  Sync,
   Clock,
   Database,
   Cloud,
@@ -20,6 +22,35 @@ const FarmerCollectionApp = () => {
   const [syncStatus, setSyncStatus] = useState('idle'); // idle, syncing, success, error
   const [pendingCollections, setPendingCollections] = useState([]);
   const [syncedCollections, setSyncedCollections] = useState([]);
+  const [currentCollection, setCurrentCollection] = useState(null);
+
+  // Mock data for offline collections
+  const [offlineCollections] = useState([
+    {
+      id: 'offline_1',
+      farmerName: 'Rajesh Kumar',
+      herbType: 'Turmeric',
+      quantity: 25.5,
+      unit: 'kg',
+      location: { latitude: 26.2389, longitude: 73.0243, address: 'Rajasthan, India' },
+      collectionDate: '2024-01-15',
+      qualityMetrics: { moisture: 12.5, temperature: 28, ph: 6.8 },
+      status: 'pending',
+      timestamp: '2024-01-15T10:30:00Z'
+    },
+    {
+      id: 'offline_2',
+      farmerName: 'Priya Sharma',
+      herbType: 'Ashwagandha',
+      quantity: 18.2,
+      unit: 'kg',
+      location: { latitude: 10.8505, longitude: 76.2711, address: 'Kerala, India' },
+      collectionDate: '2024-01-14',
+      qualityMetrics: { moisture: 15.2, temperature: 26, ph: 7.2 },
+      status: 'pending',
+      timestamp: '2024-01-14T14:20:00Z'
+    }
+  ]);
 
   // Monitor online/offline status
   useEffect(() => {
@@ -54,11 +85,20 @@ const FarmerCollectionApp = () => {
   };
 
   // Add new collection (offline)
+  const addCollection = (collection) => {
+    const newCollection = {
+      ...collection,
+      id: `offline_${Date.now()}`,
+      status: 'pending',
+      timestamp: new Date().toISOString()
+    };
+    setPendingCollections(prev => [...prev, newCollection]);
+  };
 
   const getSyncStatusIcon = () => {
     switch (syncStatus) {
       case 'syncing':
-        return <RefreshCcw className="h-4 w-4 animate-spin text-blue-500" />;
+        return <Sync className="h-4 w-4 animate-spin text-blue-500" />;
       case 'success':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'error':

@@ -17,6 +17,36 @@ import RecallSimulation from './components/RecallSimulation';
 import AdminPanel from './components/AdminPanel';
 import FileUpload from './components/FileUpload';
 import QRScanner from './components/QRScanner';
+import TraceViewer from './components/TraceViewer';
+import FarmerApp from './components/FarmerApp';
+import Analytics from './components/Analytics';
+import Reports from './components/Reports';
+import UsersManagement from './components/UsersManagement';
+import Settings from './components/Settings';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Import farmer components
+import FarmerCropUpload from './components/farmer/FarmerCropUpload';
+import FarmerHarvestRecords from './components/farmer/FarmerHarvestRecords';
+import FarmerDocuments from './components/farmer/FarmerDocuments';
+import FarmerSupplyTracking from './components/farmer/FarmerSupplyTracking';
+import FarmerQualityFeedback from './components/farmer/FarmerQualityFeedback';
+import FarmerTransparencyCredits from './components/farmer/FarmerTransparencyCredits';
+
+// Import processor components
+import ProcessorReceiveBatches from './components/processor/ProcessorReceiveBatches';
+import ProcessorRecords from './components/processor/ProcessorRecords';
+import ProcessorQualityTests from './components/processor/ProcessorQualityTests';
+import ProcessorQRGeneration from './components/processor/ProcessorQRGeneration';
+import ProcessorChainOfCustody from './components/processor/ProcessorChainOfCustody';
+
+// Import admin components
+import AdminUserManagement from './components/AdminUserManagement';
+import AdminAnalyticsDashboard from './components/AdminAnalyticsDashboard';
+import AdminAIPredictions from './components/AdminAIPredictions';
+import AdminSystemControl from './components/AdminSystemControl';
+import AdminSecurityMonitoring from './components/AdminSecurityMonitoring';
+import AdminIntegrationHub from './components/AdminIntegrationHub';
 
 // Create a theme
 const theme = createTheme({
@@ -48,6 +78,179 @@ const theme = createTheme({
 
 // Auth context for managing user state
 export const AuthContext = React.createContext();
+
+// Main app wrapper that handles routing and page state
+const AppWrapper = ({ user, onLogout, onProfileUpdate }) => {
+  const [currentPage, setCurrentPage] = useState('dashboard');
+
+  // Page change handler
+  const handlePageChange = (pageId) => {
+    setCurrentPage(pageId);
+  };
+
+  return (
+    <MainLayout 
+      user={user} 
+      onLogout={onLogout}
+      currentPage={currentPage}
+      onPageChange={handlePageChange}
+    >
+      <Routes>
+        <Route path="/" element={<ModernDashboard />} />
+        <Route path="/dashboard" element={<ModernDashboard />} />
+        <Route path="/collect" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer', 'processor']}>
+            <CollectionForm />
+          </ProtectedRoute>
+        } />
+        <Route path="/collection" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer', 'processor']}>
+            <CollectionForm />
+          </ProtectedRoute>
+        } />
+        <Route path="/consumer" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
+            <ConsumerPortal />
+          </ProtectedRoute>
+        } />
+        <Route path="/consumer-portal" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
+            <ConsumerPortal />
+          </ProtectedRoute>
+        } />
+        <Route path="/farmer-app" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
+            <FarmerApp />
+          </ProtectedRoute>
+        } />
+        
+        {/* Farmer specific routes */}
+        <Route path="/farmer/crop-upload" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
+            <FarmerCropUpload />
+          </ProtectedRoute>
+        } />
+        <Route path="/farmer/harvest-data" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
+            <FarmerHarvestRecords />
+          </ProtectedRoute>
+        } />
+        <Route path="/farmer/documents" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
+            <FarmerDocuments />
+          </ProtectedRoute>
+        } />
+        <Route path="/farmer/supply-tracking" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
+            <FarmerSupplyTracking />
+          </ProtectedRoute>
+        } />
+        <Route path="/farmer/feedback" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
+            <FarmerQualityFeedback />
+          </ProtectedRoute>
+        } />
+        <Route path="/farmer/credits" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
+            <FarmerTransparencyCredits />
+          </ProtectedRoute>
+        } />
+        
+        {/* Processor specific routes */}
+        <Route path="/processor/receive-batches" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'processor']}>
+            <ProcessorReceiveBatches />
+          </ProtectedRoute>
+        } />
+        <Route path="/processor/processing-steps" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'processor']}>
+            <ProcessorRecords />
+          </ProtectedRoute>
+        } />
+        <Route path="/processor/quality-tests" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'processor']}>
+            <ProcessorQualityTests />
+          </ProtectedRoute>
+        } />
+        <Route path="/processor/generate-qr" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'processor']}>
+            <ProcessorQRGeneration />
+          </ProtectedRoute>
+        } />
+        <Route path="/processor/chain-custody" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'processor']}>
+            <ProcessorChainOfCustody />
+          </ProtectedRoute>
+        } />
+        
+        {/* Admin specific routes */}
+        <Route path="/admin/users" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <AdminUserManagement />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/analytics" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <AdminAnalyticsDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/ai-predictions" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <AdminAIPredictions />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/system" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <AdminSystemControl />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/security" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <AdminSecurityMonitoring />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/integrations" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <AdminIntegrationHub />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/qrscan" element={<QRScanner />} />
+        <Route path="/qr-scanner" element={<QRScanner />} />
+        <Route path="/trace/:traceId" element={<TraceViewer />} />
+        <Route path="/analytics" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'processor', 'regulator']}>
+            <Analytics />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <AdminPanel />
+          </ProtectedRoute>
+        } />
+        <Route path="/recall" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'regulator']}>
+            <RecallSimulation />
+          </ProtectedRoute>
+        } />
+        <Route path="/reports" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'processor', 'regulator']}>
+            <Reports />
+          </ProtectedRoute>
+        } />
+        <Route path="/users" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <UsersManagement />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={<UserProfile user={user} onUpdate={onProfileUpdate} />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/upload" element={<FileUpload />} />
+        <Route path="*" element={<Navigate to="/dashboard" />} />
+      </Routes>
+    </MainLayout>
+  );
+};
 
 function App() {
   const [user, setUser] = useState(null);
@@ -121,22 +324,7 @@ function App() {
   // Extract main content logic for clarity
   let mainContent;
   if (user) {
-    mainContent = (
-      <MainLayout user={user} onLogout={handleLogout}>
-        <Routes>
-          <Route path="/" element={<ModernDashboard />} />
-          <Route path="/dashboard" element={<ModernDashboard />} />
-          <Route path="/collect" element={<CollectionForm />} />
-          <Route path="/consumer" element={<ConsumerPortal />} />
-          <Route path="/recall" element={<RecallSimulation />} />
-          <Route path="/admin" element={user.role === 'admin' ? <AdminPanel /> : <Navigate to="/dashboard" />} />
-          <Route path="/upload" element={<FileUpload />} />
-          <Route path="/qrscan" element={<QRScanner />} />
-          <Route path="/profile" element={<UserProfile user={user} onUpdate={handleProfileUpdate} />} />
-          <Route path="*" element={<Navigate to="/dashboard" />} />
-        </Routes>
-      </MainLayout>
-    );
+    mainContent = <AppWrapper user={user} onLogout={handleLogout} onProfileUpdate={handleProfileUpdate} />;
   } else if (showSignup) {
     mainContent = (
       <Signup 
@@ -169,7 +357,7 @@ function App() {
       <CssBaseline />
       <AuthContext.Provider value={authContextValue}>
         <Router>
-          <Box className="App">
+          <Box className="App" sx={{ minHeight: '100vh', width: '100%' }}>
             {mainContent}
           </Box>
         </Router>

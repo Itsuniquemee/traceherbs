@@ -39,30 +39,31 @@ const Login = ({ onLogin, isLoading = false }) => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock authentication
-      if (data.email === 'admin@traceherb.com' && data.password === 'admin123') {
+      // Mock authentication with role-based login
+      const validCredentials = {
+        'admin@herbaltrace.com': { password: 'admin123', role: 'admin', name: 'Dr. Admin Singh' },
+        'farmer@herbaltrace.com': { password: 'farmer123', role: 'farmer', name: 'Rajesh Kumar' },
+        'consumer@herbaltrace.com': { password: 'consumer123', role: 'consumer', name: 'Priya Sharma' },
+        'processor@herbaltrace.com': { password: 'processor123', role: 'processor', name: 'Suresh Patel' },
+        'regulator@herbaltrace.com': { password: 'regulator123', role: 'regulator', name: 'Dr. Kavita Singh' }
+      };
+
+      const userCredentials = validCredentials[data.email];
+      
+      if (userCredentials && userCredentials.password === data.password) {
+        // Verify role matches selected role for security
+        if (userCredentials.role !== data.role) {
+          setLoginError(`Invalid role selected. This account is registered as ${userCredentials.role}.`);
+          return;
+        }
+        
         onLogin({
-          id: 1,
-          name: 'Admin User',
+          id: Object.keys(validCredentials).indexOf(data.email) + 1,
+          name: userCredentials.name,
           email: data.email,
-          role: 'admin',
-          avatar: null
-        });
-      } else if (data.email === 'farmer@traceherb.com' && data.password === 'farmer123') {
-        onLogin({
-          id: 2,
-          name: 'Rajesh Kumar',
-          email: data.email,
-          role: 'farmer',
-          avatar: null
-        });
-      } else if (data.email === 'consumer@traceherb.com' && data.password === 'consumer123') {
-        onLogin({
-          id: 3,
-          name: 'Priya Sharma',
-          email: data.email,
-          role: 'consumer',
-          avatar: null
+          role: userCredentials.role,
+          avatar: null,
+          permissions: getRolePermissions(userCredentials.role)
         });
       } else {
         setLoginError('Invalid email or password');
@@ -72,18 +73,119 @@ const Login = ({ onLogin, isLoading = false }) => {
     }
   };
 
+  // Define role-based permissions with enhanced features
+  const getRolePermissions = (role) => {
+    const permissions = {
+      admin: [
+        // Core Access
+        'view_dashboard', 'view_profile', 'view_settings',
+        // User Management
+        'manage_users', 'view_all_users', 'create_users', 'delete_users',
+        // Analytics & Monitoring
+        'view_analytics', 'view_fraud_detection', 'view_adulteration_trends', 'ai_predictions',
+        // System Control
+        'manage_system', 'cybersecurity_monitoring', 'role_permissions', 'integration_management',
+        // QR & Products
+        'generate_qr_codes', 'manage_products', 'view_qr_scanner',
+        // All other features
+        'view_supply_chain', 'view_audit_trails', 'batch_approval', 'payment_integration'
+      ],
+      farmer: [
+        // Core Access
+        'view_dashboard', 'view_profile', 'view_settings',
+        // Crop Management
+        'upload_crop_details', 'upload_harvest_data', 'gps_tagging', 'batch_creation',
+        // Documentation
+        'upload_organic_certificate', 'upload_soil_tests', 'upload_supporting_docs',
+        // Supply Chain Visibility
+        'track_produce_journey', 'view_supply_chain', 'view_qr_scanner',
+        // Feedback & Incentives
+        'receive_feedback', 'view_quality_ratings', 'transparency_credits'
+      ],
+      consumer: [
+        // Core Access
+        'view_dashboard', 'view_profile', 'view_settings',
+        // Product Verification
+        'scan_qr_codes', 'view_product_journey', 'check_authenticity', 'verify_certifications',
+        // Comparison & Rating
+        'compare_products', 'purity_scores', 'traceability_index', 'rate_products', 'write_reviews',
+        // Fraud Reporting
+        'report_fake_products', 'report_adulteration', 'consumer_portal'
+      ],
+      processor: [
+        // Core Access
+        'view_dashboard', 'view_profile', 'view_settings',
+        // Batch Management
+        'receive_raw_materials', 'scan_farmer_qr', 'blockchain_verification',
+        // Processing Operations
+        'record_processing_steps', 'washing_records', 'drying_records', 'extraction_records', 'packaging_records',
+        // Quality Control
+        'upload_quality_tests', 'upload_lab_certificates', 'quality_assurance',
+        // QR Generation
+        'generate_product_qr', 'chain_of_custody', 'batch_tracking', 'view_analytics'
+      ],
+      regulator: [
+        // Core Access
+        'view_dashboard', 'view_profile', 'view_settings',
+        // Real-time Monitoring
+        'real_time_dashboard', 'supply_chain_monitoring', 'movement_tracking',
+        // Audit & Compliance
+        'view_audit_trails', 'certification_verification', 'organic_verification', 'ayush_verification', 'gmp_verification',
+        // Alerts & Detection
+        'adulteration_alerts', 'mismatch_detection', 'automated_alerts',
+        // Batch Management
+        'batch_approval', 'batch_rejection', 'pre_market_verification',
+        // Reporting
+        'regulatory_reports', 'compliance_analytics'
+      ]
+    };
+    return permissions[role] || [];
+  };
+
   const roleOptions = [
-    { value: 'farmer', label: 'Farmer', icon: User },
-    { value: 'processor', label: 'Processor', icon: Shield },
-    { value: 'regulator', label: 'Regulator', icon: Shield },
-    { value: 'consumer', label: 'Consumer', icon: User },
-    { value: 'admin', label: 'Admin', icon: Shield }
+    { 
+      value: 'farmer', 
+      label: 'Farmer', 
+      icon: User,
+      description: 'Upload crop details, organic certificates, track produce journey, get quality feedback',
+      features: ['Crop Upload', 'GPS Tagging', 'Organic Certificates', 'Supply Chain Tracking']
+    },
+    { 
+      value: 'processor', 
+      label: 'Processor', 
+      icon: Shield,
+      description: 'Receive batches, record processing steps, upload quality reports, generate QR codes',
+      features: ['Batch Processing', 'Quality Tests', 'Chain of Custody', 'QR Generation']
+    },
+    { 
+      value: 'regulator', 
+      label: 'Regulator', 
+      icon: Shield,
+      description: 'Real-time monitoring, audit trails, automated alerts, batch approval system',
+      features: ['Live Dashboard', 'Audit Trails', 'Batch Approval', 'Fraud Detection']
+    },
+    { 
+      value: 'consumer', 
+      label: 'Consumer', 
+      icon: User,
+      description: 'Scan QR codes, check authenticity, compare products, report fake items',
+      features: ['QR Scanning', 'Product Verification', 'Quality Rating', 'Fraud Reporting']
+    },
+    { 
+      value: 'admin', 
+      label: 'Admin', 
+      icon: Shield,
+      description: 'User management, analytics dashboard, AI predictions, cybersecurity monitoring',
+      features: ['User Management', 'AI Analytics', 'System Control', 'Security Monitoring']
+    }
   ];
 
   const demoAccounts = [
-    { email: 'admin@traceherb.com', password: 'admin123', role: 'admin', name: 'Admin User' },
-    { email: 'farmer@traceherb.com', password: 'farmer123', role: 'farmer', name: 'Rajesh Kumar' },
-    { email: 'consumer@traceherb.com', password: 'consumer123', role: 'consumer', name: 'Priya Sharma' }
+    { email: 'admin@herbaltrace.com', password: 'admin123', role: 'admin', name: 'Dr. Admin Singh' },
+    { email: 'farmer@herbaltrace.com', password: 'farmer123', role: 'farmer', name: 'Rajesh Kumar' },
+    { email: 'consumer@herbaltrace.com', password: 'consumer123', role: 'consumer', name: 'Priya Sharma' },
+    { email: 'processor@herbaltrace.com', password: 'processor123', role: 'processor', name: 'Suresh Patel' },
+    { email: 'regulator@herbaltrace.com', password: 'regulator123', role: 'regulator', name: 'Dr. Kavita Singh' }
   ];
 
   const handleDemoLogin = (account) => {
@@ -106,7 +208,7 @@ const Login = ({ onLogin, isLoading = false }) => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4">
             <Leaf className="h-8 w-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">TraceHerb</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">HerbalTrace</h1>
           <p className="text-muted-foreground">Sign in to your account</p>
         </div>
 
@@ -120,23 +222,42 @@ const Login = ({ onLogin, isLoading = false }) => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Role Selection */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Role</label>
+              <label htmlFor="role-select" className="text-sm font-medium text-foreground">Role</label>
               <select
+                id="role-select"
                 {...register('role', { required: 'Please select a role' })}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
               >
-                {roleOptions.map((role) => {
-                  const Icon = role.icon;
-                  return (
-                    <option key={role.value} value={role.value}>
-                      {role.label}
-                    </option>
-                  );
-                })}
+                {roleOptions.map((role) => (
+                  <option key={role.value} value={role.value}>
+                    {role.label}
+                  </option>
+                ))}
               </select>
               {errors.role && (
                 <p className="text-sm text-red-600">{errors.role.message}</p>
               )}
+              
+              {/* Role Description */}
+              <div className="mt-3 p-3 bg-muted/50 rounded-lg border">
+                {roleOptions.find(r => r.value === register('role').defaultValue || 'farmer') && (
+                  <div>
+                    <p className="text-sm text-foreground mb-2">
+                      {roleOptions.find(r => r.value === register('role').defaultValue || 'farmer')?.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {roleOptions.find(r => r.value === register('role').defaultValue || 'farmer')?.features.map((feature, idx) => (
+                        <span 
+                          key={`feature-${idx}`}
+                          className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
+                        >
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Email */}

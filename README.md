@@ -1,4 +1,4 @@
-# Traceherbs Botanical Traceability System
+# HerbalTrace Botanical Traceability System
 
 This project provides end-to-end traceability for Ayurvedic herbs, including geo-tagged data capture, QR code labeling, RESTful APIs, and consumer-facing portals. Blockchain features are excluded in this version.
 
