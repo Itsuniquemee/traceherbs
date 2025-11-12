@@ -23,7 +23,7 @@ class QRService {
     this.storeFullData(traceId, fullData);
 
     // Convert to compact string format for QR (only the trace URL)
-        const qrString = `https://herbaltrace.com/trace/${traceId}`;
+        const qrString = `https://traceherbss.com/trace/${traceId}`;
     
     // Validate size
     if (qrString.length > this.maxQRLength) {
@@ -188,17 +188,17 @@ class QRService {
         processingDate: new Date().toISOString().split('T')[0]
       },
       traceability: {
-        generatedBy: "HerbalTrace System",
+        generatedBy: "TraceHerbss System",
         generatedAt: new Date().toISOString(),
-        verificationUrl: `https://herbaltrace.com/verify/${traceId}`,
+        verificationUrl: `https://traceherbss.com/verify/${traceId}`,
         blockchainHash: `0x${Math.random().toString(16).substring(2, 42)}`,
         companyInfo: {
-          name: "HerbalTrace Pvt Ltd",
+          name: "TraceHerbss Pvt Ltd",
           registrationNumber: "CIN-U01119DL2024PTC123456",
           address: "123 Herbal Park, New Delhi, India - 110001",
           contact: "+91-9876543210",
-          email: "verify@herbaltrace.com",
-          website: "www.herbaltrace.com"
+          email: "verify@traceherbss.com",
+          website: "www.traceherbss.com"
         }
       },
       journey: this.createJourney(productData, collectionData),
@@ -312,8 +312,8 @@ class QRService {
   validateQRData(qrString) {
     try {
       // Check if it's our URL format
-      if (qrString.startsWith('https://herbaltrace.com/trace/')) {
-        const traceId = qrString.replace('https://herbaltrace.com/trace/', '');
+      if (qrString.startsWith('https://traceherbss.com/trace/')) {
+        const traceId = qrString.replace('https://traceherbss.com/trace/', '');
         return { isValid: true, traceId };
       }
       

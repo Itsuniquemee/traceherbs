@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { apiClient } from '../config/api';
 import { 
   Mail, 
   Lock, 
@@ -14,10 +16,11 @@ import {
   Leaf
 } from 'lucide-react';
 
-const Login = ({ onLogin, isLoading = false }) => {
+const Login = ({ onLogin, onSignupClick, isLoading = false }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [isRememberMe, setIsRememberMe] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -36,40 +39,83 @@ const Login = ({ onLogin, isLoading = false }) => {
     setLoginError('');
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('🚀 Attempting login with:', { email: data.email });
       
-      // Mock authentication with role-based login
-      const validCredentials = {
-        'admin@herbaltrace.com': { password: 'admin123', role: 'admin', name: 'Dr. Admin Singh' },
-        'farmer@herbaltrace.com': { password: 'farmer123', role: 'farmer', name: 'Rajesh Kumar' },
-        'consumer@herbaltrace.com': { password: 'consumer123', role: 'consumer', name: 'Priya Sharma' },
-        'processor@herbaltrace.com': { password: 'processor123', role: 'processor', name: 'Suresh Patel' },
-        'regulator@herbaltrace.com': { password: 'regulator123', role: 'regulator', name: 'Dr. Kavita Singh' }
-      };
+      // Call backend API for authentication
+      const response = await apiClient.post('/auth/login', {
+        email: data.email,
+        password: data.password
+      });
 
-      const userCredentials = validCredentials[data.email];
+      const result = response.data;
+      console.log('✅ Login successful:', result);
+
+      // Store token for authenticated requests
+      localStorage.setItem('traceherbs_token', result.token);
       
-      if (userCredentials && userCredentials.password === data.password) {
-        // Verify role matches selected role for security
-        if (userCredentials.role !== data.role) {
-          setLoginError(`Invalid role selected. This account is registered as ${userCredentials.role}.`);
-          return;
+      const userData = {
+        id: result.user.id,
+        name: result.user.fullName,
+        email: result.user.email,
+        role: result.user.role,
+        avatar: result.user.profilePicture,
+        permissions: getRolePermissions(result.user.role)
+      };
+      
+      onLogin(userData);
+
+      // Role-based redirection after successful login
+      console.log('🎯 Redirecting user based on role:', result.user.role);
+      setTimeout(() => {
+        switch (user.role) {
+            case 'admin':
+            navigate('/app/admin/pending-approvals', { replace: true });
+            break;
+          case 'farmer':
+            navigate('/app/farmer/crop-upload', { replace: true });
+            break;
+          case 'processor':
+            navigate('/app/processor/receive-batches', { replace: true });
+            break;
+          case 'consumer':
+            navigate('/app/consumer-portal', { replace: true });
+            break;
+          case 'regulator':
+            navigate('/app/analytics', { replace: true });
+            break;
+          default:
+            navigate('/dashboard', { replace: true });
         }
-        
-        onLogin({
-          id: Object.keys(validCredentials).indexOf(data.email) + 1,
-          name: userCredentials.name,
-          email: data.email,
-          role: userCredentials.role,
-          avatar: null,
-          permissions: getRolePermissions(userCredentials.role)
-        });
-      } else {
-        setLoginError('Invalid email or password');
-      }
+      }, 100); // Small delay to ensure state updates
     } catch (error) {
-      setLoginError('Login failed. Please try again.');
+      console.error('❌ Login error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response,
+        request: error.request,
+        config: error.config
+      });
+      
+      if (error.response?.status) {
+        switch (error.response.status) {
+          case 403:
+            setLoginError('Account awaiting admin approval. You will be notified once approved.');
+            break;
+          case 401:
+            setLoginError('Invalid email or password');
+            break;
+          case 404:
+            setLoginError('No account found with this email');
+            break;
+          case 423:
+            setLoginError('Account temporarily locked due to too many failed login attempts');
+            break;
+          default:
+            setLoginError(error.response.data?.message || 'Login failed. Please try again.');
+        }
+      } else {
+        setLoginError('Network error. Please check your connection and try again.');
+      }
     }
   };
 
@@ -181,11 +227,11 @@ const Login = ({ onLogin, isLoading = false }) => {
   ];
 
   const demoAccounts = [
-    { email: 'admin@herbaltrace.com', password: 'admin123', role: 'admin', name: 'Dr. Admin Singh' },
-    { email: 'farmer@herbaltrace.com', password: 'farmer123', role: 'farmer', name: 'Rajesh Kumar' },
-    { email: 'consumer@herbaltrace.com', password: 'consumer123', role: 'consumer', name: 'Priya Sharma' },
-    { email: 'processor@herbaltrace.com', password: 'processor123', role: 'processor', name: 'Suresh Patel' },
-    { email: 'regulator@herbaltrace.com', password: 'regulator123', role: 'regulator', name: 'Dr. Kavita Singh' }
+    { email: 'admin@traceherbss.com', password: 'Admin123!', role: 'admin', name: 'Admin User' },
+    { email: 'farmer@traceherbss.com', password: 'Farmer123!', role: 'farmer', name: 'Demo Farmer' },
+    { email: 'consumer@traceherbss.com', password: 'Consumer123!', role: 'consumer', name: 'Demo Consumer' },
+    { email: 'processor@traceherbss.com', password: 'Processor123!', role: 'processor', name: 'Demo Processor' },
+    { email: 'regulator@traceherbss.com', password: 'Regulator123!', role: 'regulator', name: 'Demo Regulator' }
   ];
 
   const handleDemoLogin = (account) => {
@@ -377,9 +423,13 @@ const Login = ({ onLogin, isLoading = false }) => {
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
               Don't have an account?{' '}
-              <a href="#" className="text-primary hover:underline font-medium">
+              <button 
+                type="button"
+                onClick={onSignupClick}
+                className="text-primary hover:underline font-medium bg-transparent border-none cursor-pointer"
+              >
                 Sign up
-              </a>
+              </button>
             </p>
           </div>
         </motion.div>

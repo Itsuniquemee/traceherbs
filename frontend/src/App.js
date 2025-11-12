@@ -2,10 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Box, Button, CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
+// Import TraceHerbs provider and hooks for real backend integration
+import { TraceHerbsProvider, useAuth } from './hooks/useTraceHerbs';
+
 // Import components
+import PASLandingPage from './components/PASLandingPage';
+import LandingPage from './components/LandingPage';
 import ModernDashboard from './components/ModernDashboard';
 import CollectionForm from './components/CollectionForm';
 import ConsumerPortal from './components/ConsumerPortal';
@@ -24,6 +32,7 @@ import Reports from './components/Reports';
 import UsersManagement from './components/UsersManagement';
 import Settings from './components/Settings';
 import ProtectedRoute from './components/ProtectedRoute';
+import RoleBasedRedirect from './components/RoleBasedRedirect';
 
 // Import farmer components
 import FarmerCropUpload from './components/farmer/FarmerCropUpload';
@@ -32,6 +41,7 @@ import FarmerDocuments from './components/farmer/FarmerDocuments';
 import FarmerSupplyTracking from './components/farmer/FarmerSupplyTracking';
 import FarmerQualityFeedback from './components/farmer/FarmerQualityFeedback';
 import FarmerTransparencyCredits from './components/farmer/FarmerTransparencyCredits';
+import FarmerQRGeneration from './components/farmer/FarmerQRGeneration';
 
 // Import processor components
 import ProcessorReceiveBatches from './components/processor/ProcessorReceiveBatches';
@@ -47,6 +57,7 @@ import AdminAIPredictions from './components/AdminAIPredictions';
 import AdminSystemControl from './components/AdminSystemControl';
 import AdminSecurityMonitoring from './components/AdminSecurityMonitoring';
 import AdminIntegrationHub from './components/AdminIntegrationHub';
+import AdminPendingApprovals from './components/AdminPendingApprovals';
 
 // Create a theme
 const theme = createTheme({
@@ -89,43 +100,56 @@ const AppWrapper = ({ user, onLogout, onProfileUpdate }) => {
   };
 
   return (
-    <MainLayout 
-      user={user} 
-      onLogout={onLogout}
-      currentPage={currentPage}
-      onPageChange={handlePageChange}
-    >
-      <Routes>
-        <Route path="/" element={<ModernDashboard />} />
-        <Route path="/dashboard" element={<ModernDashboard />} />
-        <Route path="/collect" element={
+    <Routes>
+      {/* Landing page - always shown first, no layout wrapper */}
+      <Route path="/" element={<PASLandingPage />} />
+      <Route path="/home" element={<PASLandingPage />} />
+      
+      {/* Login and Signup routes - no layout */}
+      <Route path="/login" element={<Login onLogin={onProfileUpdate} />} />
+      <Route path="/signup" element={<Signup onSignup={onProfileUpdate} />} />
+      
+      {/* Dashboard route */}
+      <Route path="/dashboard" element={user ? <RoleBasedRedirect user={user} /> : <Navigate to="/" />} />
+      
+      {/* Protected app routes with MainLayout */}
+      <Route path="/app/*" element={
+        <MainLayout 
+          user={user} 
+          onLogout={onLogout}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        >
+          <Routes>
+            <Route path="main-dashboard" element={<ModernDashboard />} />
+        <Route path="collect" element={
           <ProtectedRoute user={user} requiredRoles={['admin', 'farmer', 'processor']}>
             <CollectionForm />
           </ProtectedRoute>
         } />
-        <Route path="/collection" element={
+        <Route path="collection" element={
           <ProtectedRoute user={user} requiredRoles={['admin', 'farmer', 'processor']}>
             <CollectionForm />
           </ProtectedRoute>
         } />
-        <Route path="/consumer" element={
+        <Route path="consumer" element={
           <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
             <ConsumerPortal />
           </ProtectedRoute>
         } />
-        <Route path="/consumer-portal" element={
+        <Route path="consumer-portal" element={
           <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
             <ConsumerPortal />
           </ProtectedRoute>
         } />
-        <Route path="/farmer-app" element={
+        <Route path="farmer-app" element={
           <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
             <FarmerApp />
           </ProtectedRoute>
         } />
         
         {/* Farmer specific routes */}
-        <Route path="/farmer/crop-upload" element={
+        <Route path="farmer/crop-upload" element={
           <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
             <FarmerCropUpload />
           </ProtectedRoute>
@@ -153,6 +177,11 @@ const AppWrapper = ({ user, onLogout, onProfileUpdate }) => {
         <Route path="/farmer/credits" element={
           <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
             <FarmerTransparencyCredits />
+          </ProtectedRoute>
+        } />
+        <Route path="/farmer/generate-qr" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'farmer']}>
+            <FarmerQRGeneration />
           </ProtectedRoute>
         } />
         
@@ -187,6 +216,11 @@ const AppWrapper = ({ user, onLogout, onProfileUpdate }) => {
         <Route path="/admin/users" element={
           <ProtectedRoute user={user} requiredRoles={['admin']}>
             <AdminUserManagement />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/pending-approvals" element={
+          <ProtectedRoute user={user} requiredRoles={['admin']}>
+            <AdminPendingApprovals />
           </ProtectedRoute>
         } />
         <Route path="/admin/analytics" element={
@@ -243,19 +277,20 @@ const AppWrapper = ({ user, onLogout, onProfileUpdate }) => {
             <UsersManagement />
           </ProtectedRoute>
         } />
-        <Route path="/profile" element={<UserProfile user={user} onUpdate={onProfileUpdate} />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/upload" element={<FileUpload />} />
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
-    </MainLayout>
+            <Route path="profile" element={<UserProfile user={user} onUpdate={onProfileUpdate} />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="upload" element={<FileUpload />} />
+            <Route path="*" element={<Navigate to="/main-dashboard" />} />
+          </Routes>
+        </MainLayout>
+      } />
+    </Routes>
   );
 };
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showSignup, setShowSignup] = useState(false);
 
   // Handle user login
   const handleLogin = (userData) => {
@@ -294,11 +329,7 @@ function App() {
     localStorage.removeItem('ayurvedicTraceUser');
   };
 
-  // Handle user profile update
-  const handleProfileUpdate = (updatedUser) => {
-    setUser(updatedUser);
-    localStorage.setItem('ayurvedicTraceUser', JSON.stringify(updatedUser));
-  };
+
 
   // Show loading spinner while checking authentication status
   if (loading) {
@@ -321,45 +352,47 @@ function App() {
     );
   }
 
-  // Extract main content logic for clarity
-  let mainContent;
-  if (user) {
-    mainContent = <AppWrapper user={user} onLogout={handleLogout} onProfileUpdate={handleProfileUpdate} />;
-  } else if (showSignup) {
-    mainContent = (
-      <Signup 
-        onSignup={(userData) => {
-          handleLogin(userData);
-          setShowSignup(false);
-        }} 
-        onBackToLogin={() => setShowSignup(false)}
-      />
-    );
-  } else {
-    mainContent = (
-      <>
-        <Login onLogin={handleLogin} />
-        <Box sx={{ textAlign: 'center', mt: 2, p: 2 }}>
-          <Button 
-            variant="text" 
-            onClick={() => setShowSignup(true)}
-            sx={{ textTransform: 'none' }}
-          >
-            Don't have an account? Sign up
-          </Button>
-        </Box>
-      </>
-    );
-  }
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthContext.Provider value={authContextValue}>
         <Router>
           <Box className="App" sx={{ minHeight: '100vh', width: '100%' }}>
-            {mainContent}
+            <AppWrapper user={user} onLogout={handleLogout} onProfileUpdate={handleLogin} />
           </Box>
+          
+          {/* Toast notifications for real-time feedback */}
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+          
+          {/* React Hot Toast Notifications */}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+              success: {
+                duration: 3000,
+                theme: {
+                  primary: 'green',
+                  secondary: 'black',
+                },
+              },
+            }}
+          />
         </Router>
       </AuthContext.Provider>
     </ThemeProvider>

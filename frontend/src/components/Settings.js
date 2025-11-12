@@ -28,7 +28,7 @@ const Settings = () => {
     // Profile Settings
     profile: {
       name: 'Dr. Priya Sharma',
-      email: 'priya.sharma@herbaltrace.com',
+      email: 'priya.sharma@traceherbss.com',
       phone: '+91 98765 43210',
       designation: 'System Administrator',
       avatar: null

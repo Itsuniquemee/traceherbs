@@ -1468,13 +1468,13 @@ const QRScanner = () => {
                     <h4 className="font-semibold text-foreground mb-3">Verification & Contact</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div>
-                        <div className="mb-2"><span className="font-medium">Company:</span> HerbalTrace Pvt Ltd</div>
+                        <div className="mb-2"><span className="font-medium">Company:</span> TraceHerbss Pvt Ltd</div>
                         <div className="mb-2"><span className="font-medium">Customer Care:</span> 1800-123-HERB (4372)</div>
-                        <div><span className="font-medium">Email:</span> verify@herbaltrace.com</div>
+                        <div><span className="font-medium">Email:</span> verify@traceherbss.com</div>
                       </div>
                       <div>
                         <div className="mb-2"><span className="font-medium">Verification URL:</span></div>
-                        <div className="text-blue-600 text-xs break-all">https://herbaltrace.com/verify/{selectedProduct.id}</div>
+                        <div className="text-blue-600 text-xs break-all">https://traceherbss.com/verify/{selectedProduct.id}</div>
                         <div className="mt-2"><span className="font-medium">Blockchain Hash:</span></div>
                         <div className="text-muted-foreground text-xs font-mono">0x{Math.random().toString(16).substring(2, 42)}</div>
                       </div>

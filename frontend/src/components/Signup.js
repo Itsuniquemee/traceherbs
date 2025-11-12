@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
+import { apiClient, apiEndpoints } from '../config/api';
 import { 
   Mail, 
   Lock, 
@@ -15,7 +16,7 @@ import {
   Leaf
 } from 'lucide-react';
 
-const Signup = ({ onSignup, isLoading = false }) => {
+const Signup = ({ onSignup, onBackToLogin, isLoading = false }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [signupError, setSignupError] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
@@ -50,16 +51,47 @@ const Signup = ({ onSignup, isLoading = false }) => {
     }
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      onSignup({
-        id: Date.now(),
-        name: `${data.firstName} ${data.lastName}`,
+      const response = await apiClient.post('/auth/register', {
+        username: data.email.split('@')[0], // Generate username from email
         email: data.email,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
         role: data.role,
-        avatar: null
+        phone: data.phone,
+        address: data.location ? {
+          city: data.location,
+          country: 'India'
+        } : undefined
       });
+
+      const result = response.data;
+
+      // Check if approval is required
+      const requiresApproval = data.role !== 'consumer';
+      
+      if (requiresApproval) {
+        // Show approval pending message
+        alert(`Registration successful! Your ${data.role} account is pending admin approval. You will be notified once approved.`);
+      } else {
+        // Auto-approved consumer registration
+        onSignup({
+          id: result.user.id,
+          name: `${data.firstName} ${data.lastName}`,
+          email: data.email,
+          role: data.role,
+          avatar: null
+        });
+      }
     } catch (error) {
-      setSignupError('Signup failed. Please try again.');
+      console.error('Registration error:', error);
+      if (error.response?.data?.message) {
+        setSignupError(error.response.data.message);
+      } else if (error.message) {
+        setSignupError(error.message);
+      } else {
+        setSignupError('Network error. Please check your connection and try again.');
+      }
     }
   };
 
@@ -291,9 +323,13 @@ const Signup = ({ onSignup, isLoading = false }) => {
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
-              <a href="#" className="text-primary hover:underline font-medium">
+              <button 
+                type="button"
+                onClick={onBackToLogin}
+                className="text-primary hover:underline font-medium bg-transparent border-none cursor-pointer"
+              >
                 Sign in
-              </a>
+              </button>
             </p>
           </div>
         </motion.div>

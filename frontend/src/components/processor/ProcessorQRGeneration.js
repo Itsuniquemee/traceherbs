@@ -32,7 +32,7 @@ const ProcessorQRGeneration = () => {
       expiryDate: '2025-01-25',
       quantity: '50 bottles (10ml each)',
       status: 'active',
-      qrData: 'https://herbaltrace.com/verify/QR_TUL_PROC_001',
+      qrData: 'https://traceherbss.com/verify/QR_TUL_PROC_001',
       generatedBy: 'Suresh Patel',
       generatedDate: '2024-01-25',
       printCount: 50,
@@ -78,7 +78,7 @@ const ProcessorQRGeneration = () => {
       expiryDate: '2025-01-30',
       quantity: '200 bottles (30ml each)',
       status: 'expired',
-      qrData: 'https://herbaltrace.com/verify/QR_ASH_PROC_003',
+      qrData: 'https://traceherbss.com/verify/QR_ASH_PROC_003',
       generatedBy: 'Amit Singh',
       generatedDate: '2024-01-30',
       printCount: 200,
@@ -152,7 +152,7 @@ const ProcessorQRGeneration = () => {
         ? { 
             ...qr, 
             status: 'active',
-            qrData: `https://herbaltrace.com/verify/${qrId}`,
+            qrData: `https://traceherbss.com/verify/${qrId}`,
             generatedBy: 'Current User',
             generatedDate: new Date().toISOString().split('T')[0]
           }

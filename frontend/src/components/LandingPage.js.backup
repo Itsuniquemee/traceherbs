@@ -1,0 +1,901 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import '../styles/LandingPage.css';
+import {
+  Shield,
+  Leaf,
+  QrCode,
+  Users,
+  BarChart3,
+  Globe,
+  CheckCircle,
+  Play,
+  Star,
+  Zap,
+  Database,
+  Heart,
+  Eye,
+  Building,
+  UserCheck,
+  MapPin,
+  Target,
+  ChevronDown,
+  Phone,
+  ExternalLink,
+  Camera,
+  X
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const LandingPage = () => {
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [showJoinForm, setShowJoinForm] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const videoRef = useRef(null);
+
+  // Intersection Observer hooks for animations
+  const [heroRef, heroInView] = useInView({ threshold: 0.1, triggerOnce: true });
+  const [problemRef, problemInView] = useInView({ threshold: 0.1, triggerOnce: true });
+  const [solutionRef, solutionInView] = useInView({ threshold: 0.1, triggerOnce: true });
+  const [ctaRef, ctaInView] = useInView({ threshold: 0.1, triggerOnce: true });
+
+  // Auto-rotate testimonials
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonial(prev => (prev + 1) % agitatingTestimonials.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // PAS Framework Data
+  const agitatingTestimonials = [
+    {
+      quote: "We were losing entire shipments to contamination scandals. Nobody could trace where the problem started. It was costing us millions and destroying our reputation.",
+      author: "Sarah Chen",
+      title: "Quality Director, GreenLeaf Pharmaceuticals",
+      company: "Fortune 500 Herbal Company",
+      rating: 5
+    },
+    {
+      quote: "Every time there was a recall, we had to throw away everything. No traceability meant no confidence from retailers. We were bleeding money.",
+      author: "Marcus Rodriguez", 
+      title: "Supply Chain Manager, NaturalMed Corp",
+      company: "Leading Herbal Distributor",
+      rating: 5
+    },
+    {
+      quote: "Compliance audits were nightmares. Paperwork everywhere, no digital trail. We failed two major certifications before finding a real solution.",
+      author: "Dr. Priya Patel",
+      title: "Compliance Officer, HerbTech Industries",
+      company: "International Herbal Supplier",
+      rating: 5
+    }
+  ];
+
+  const clientLogos = [
+    { name: "GreenLeaf Pharmaceuticals", logo: "/api/placeholder/120/60" },
+    { name: "NaturalMed Corp", logo: "/api/placeholder/120/60" },
+    { name: "HerbTech Industries", logo: "/api/placeholder/120/60" },
+    { name: "BotanicalSupply Co", logo: "/api/placeholder/120/60" },
+    { name: "OrganicTrace Ltd", logo: "/api/placeholder/120/60" },
+    { name: "PureHerb International", logo: "/api/placeholder/120/60" }
+  ];
+
+  const problemStats = [
+    { 
+      number: "73%", 
+      label: "of herbal companies have experienced contamination issues",
+      source: "Industry Safety Report 2024"
+    },
+    { 
+      number: "$2.8B", 
+      label: "lost annually to herbal supply chain failures",
+      source: "Global Trade Analysis"
+    },
+    { 
+      number: "47%", 
+      label: "of recalls could be prevented with proper traceability",
+      source: "FDA Safety Database"
+    }
+  ];
+      
+      // Get image data for QR scanning (would be used with jsQR library)
+      context.getImageData(0, 0, canvas.width, canvas.height);
+      
+      // Use jsQR library to scan for QR codes
+      try {
+        // For now, simulate QR code detection
+        // In a real implementation, you'd use a QR code library like jsqr
+        const mockQRData = Math.random() > 0.95; // Simulate finding a QR code occasionally
+        
+        if (mockQRData) {
+          const simulatedData = `https://traceherbss.com/verify/batch-${Date.now()}`;
+          setScannedResult(simulatedData);
+          stopQRScanner();
+          return;
+        }
+      } catch (error) {
+        console.error('QR scan error:', error);
+      }
+      
+      // Continue scanning
+      if (isQRScannerOpen) {
+        requestAnimationFrame(scan);
+      }
+    };
+  };
+
+const LandingPage = () => {
+  const [showJoinForm, setShowJoinForm] = useState(false);
+  
+  return (
+    <div className="min-h-screen bg-white overflow-hidden">
+      {/* Navigation */}
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="fixed top-0 w-full bg-white/95 backdrop-blur-lg border-b border-gray-200 z-50"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center space-x-2"
+            >
+              <div className="h-10 w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                <Leaf className="h-6 w-6 text-white" />
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                TraceHerbss
+              </span>
+            </motion.div>
+            
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#problem" className="text-gray-600 hover:text-green-600 transition-colors">The Problem</a>
+              <a href="#solution" className="text-gray-600 hover:text-green-600 transition-colors">Our Solution</a>
+              <motion.button
+                onClick={() => setShowJoinForm(true)}
+                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-300"
+              >
+                Get Started Now
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* PART 1: THE PROBLEM - Hero Section */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
+        {/* Problem-focused Background */}
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-red-900/30 via-transparent to-transparent"></div>
+        
+        {/* Hero Background Image/Video Area */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="w-full h-full bg-gradient-to-br from-red-100 to-orange-100 flex items-center justify-center">
+            {/* Placeholder for authentic herbal supply chain image */}
+            <div className="text-red-300 text-center">
+              <Database className="h-24 w-24 mx-auto mb-4 opacity-50" />
+              <p className="text-sm">[ Authentic supply chain crisis image ]</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={heroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1 }}
+          >
+            <motion.h1
+              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-gray-900"
+              initial={{ opacity: 0, y: 20 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.2 }}
+            >
+              Your Herbal Supply Chain
+              <br />
+              <span className="text-red-600">
+                Is Broken
+              </span>
+            </motion.h1>
+
+            <motion.p
+              className="text-xl md:text-2xl text-gray-700 mb-8 max-w-4xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.4 }}
+            >
+              Every day, contaminated herbs slip through your supply chain. 
+              <span className="font-semibold text-red-600"> You have no idea where they came from or how to stop it.</span>
+            </motion.p>
+
+            <motion.p
+              className="text-lg text-gray-600 mb-12 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.6 }}
+            >
+              When recalls happen, you're scrambling through paperwork, losing millions, 
+              and watching your reputation crumble—all because you can't trace a single batch.
+            </motion.p>
+
+            <motion.div
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.6 }}
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={startQRScanner}
+                className="group bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center"
+              >
+                <QrCode className="mr-2 h-5 w-5" />
+                Scan QR
+                <Camera className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsVideoPlaying(true)}
+                className="flex items-center text-gray-700 hover:text-green-600 transition-colors"
+              >
+                <div className="h-12 w-12 rounded-full bg-white shadow-lg flex items-center justify-center mr-3">
+                  <Play className="h-5 w-5 ml-0.5" />
+                </div>
+                Watch Demo
+              </motion.button>
+            </motion.div>
+
+            {/* Key Benefits */}
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-16"
+              initial={{ opacity: 0, y: 30 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.8 }}
+            >
+              {[
+                { icon: <Shield />, text: "100% Secure & Transparent" },
+                { icon: <QrCode />, text: "Instant QR Verification" },
+                { icon: <BarChart3 />, text: "AI-Powered Analytics" }
+              ].map((benefit, index) => (
+                <div key={index} className="flex items-center justify-center text-gray-600">
+                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                    {React.cloneElement(benefit.icon, { className: "h-5 w-5 text-green-600" })}
+                  </div>
+                  <span className="font-medium">{benefit.text}</span>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+
+        <ScrollIndicator />
+      </section>
+
+      {/* Statistics Section */}
+      <section ref={statsRef} className="py-20 bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {statistics.map((stat, index) => (
+              <motion.div
+                key={index}
+                className="text-center"
+                initial={{ opacity: 0, y: 30 }}
+                animate={statsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
+              >
+                <div className="flex justify-center mb-4">
+                  <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center">
+                    {stat.icon}
+                  </div>
+                </div>
+                <motion.div
+                  className="text-4xl md:text-5xl font-bold mb-2"
+                  initial={{ scale: 0 }}
+                  animate={statsInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.8, delay: index * 0.2 + 0.5 }}
+                >
+                  {stat.number}
+                </motion.div>
+                <div className="text-lg text-white/90">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" ref={featuresRef} className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={featuresInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Powerful Features for
+              <span className="block bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                Complete Traceability
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Experience the next generation of supply chain transparency with our comprehensive suite of tools
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="group"
+                initial={{ opacity: 0, y: 30 }}
+                animate={featuresInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+              >
+                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-2 border border-gray-100">
+                  <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${feature.color} text-white mb-6`}>
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">{feature.description}</p>
+                  
+                  <div className="space-y-3">
+                    {feature.benefits.map((benefit, i) => (
+                      <div key={i} className="flex items-center text-sm text-gray-500">
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                        {benefit}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Solutions Section */}
+      <section id="solutions" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Tailored Solutions for
+              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Every Stakeholder
+              </span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Solutions */}
+            <div className="space-y-8">
+              {[
+                {
+                  icon: <Users className="h-8 w-8" />,
+                  title: "For Farmers",
+                  description: "Connect directly with consumers, prove authenticity, and increase product value through transparent farming practices.",
+                  features: ["Digital certificates", "Quality documentation", "Direct market access", "Premium pricing"]
+                },
+                {
+                  icon: <Building className="h-8 w-8" />,
+                  title: "For Processors",
+                  description: "Streamline operations with automated compliance reporting and real-time quality control monitoring.",
+                  features: ["Batch tracking", "Quality assurance", "Compliance automation", "Supply chain optimization"]
+                },
+                {
+                  icon: <UserCheck className="h-8 w-8" />,
+                  title: "For Regulators",
+                  description: "Ensure industry compliance with transparent audit trails and automated regulatory reporting.",
+                  features: ["Audit trails", "Compliance monitoring", "Automated reporting", "Risk assessment"]
+                },
+                {
+                  icon: <Heart className="h-8 w-8" />,
+                  title: "For Consumers",
+                  description: "Make informed choices with complete product transparency and verified quality information.",
+                  features: ["Product verification", "Origin tracking", "Quality information", "Safety assurance"]
+                }
+              ].map((solution, index) => (
+                <motion.div
+                  key={index}
+                  className="flex items-start space-x-4"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="flex-shrink-0">
+                    <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white">
+                      {solution.icon}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{solution.title}</h3>
+                    <p className="text-gray-600 mb-4">{solution.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {solution.features.map((feature, i) => (
+                        <span key={i} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Right Column - Interactive Demo */}
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              viewport={{ once: true }}
+            >
+              <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
+                
+                <div className="relative z-10">
+                  <h3 className="text-2xl font-bold mb-6">Live Traceability Demo</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <QrCode className="h-6 w-6 text-green-400" />
+                        <span>QR Code Scanned</span>
+                      </div>
+                      <div className="flex space-x-1">
+                        {[...Array(3)].map((_, i) => (
+                          <div key={i} className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: `${i * 0.2}s` }}></div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <Database className="h-6 w-6 text-blue-400" />
+                        <span>Blockchain Verified</span>
+                      </div>
+                      <CheckCircle className="h-6 w-6 text-green-400" />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <MapPin className="h-6 w-6 text-purple-400" />
+                        <span>Origin: Green Valley Farms</span>
+                      </div>
+                      <Eye className="h-6 w-6 text-blue-400" />
+                    </div>
+                  </div>
+                  
+                  <button className="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300">
+                    Try Interactive Demo
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" ref={testimonialRef} className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Trusted by Industry
+              <span className="block bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                Leaders Worldwide
+              </span>
+            </h2>
+          </div>
+
+          <motion.div
+            className="relative max-w-4xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={testimonialInView ? { opacity: 1 } : {}}
+            transition={{ duration: 1 }}
+          >
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 md:p-12">
+              <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
+                <div className="flex-shrink-0">
+                  <img
+                    src={testimonials[currentTestimonial].image}
+                    alt={testimonials[currentTestimonial].name}
+                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                  />
+                </div>
+                
+                <div className="flex-1 text-center md:text-left">
+                  <div className="flex justify-center md:justify-start mb-4">
+                    {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  
+                  <blockquote className="text-lg md:text-xl text-gray-700 mb-4 italic">
+                    "{testimonials[currentTestimonial].content}"
+                  </blockquote>
+                  
+                  <div>
+                    <div className="font-bold text-gray-900">{testimonials[currentTestimonial].name}</div>
+                    <div className="text-gray-600">{testimonials[currentTestimonial].role}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial Navigation */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentTestimonial ? 'bg-green-500' : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section id="join-us" className="py-20 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 text-white relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+              Ready to Transform Your
+              <span className="block">Supply Chain?</span>
+            </h2>
+            <p className="text-xl md:text-2xl mb-8 opacity-90">
+              Join thousands of businesses already using TraceHerbss to ensure transparency, 
+              quality, and trust in their herbal products.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={() => setShowJoinForm(true)}
+                className="bg-white text-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center"
+              >
+                Join Us
+                <Users className="ml-2 h-5 w-5" />
+              </button>
+              <a
+                href="tel:+1-555-0123"
+                className="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-green-600 transition-all duration-300 flex items-center"
+              >
+                <Phone className="mr-2 h-5 w-5" />
+                Book a Demo
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Company Info */}
+            <div>
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="h-10 w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                  <Leaf className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold">TraceHerbss</span>
+              </div>
+              <p className="text-gray-400 mb-6">
+                Revolutionizing herbal supply chain transparency with blockchain technology and AI-powered analytics.
+              </p>
+              <div className="flex space-x-4">
+                {['facebook', 'twitter', 'linkedin', 'instagram'].map((social) => (
+                  <a
+                    key={social}
+                    href={`#${social}`}
+                    className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-green-500 transition-colors"
+                  >
+                    <ExternalLink className="h-5 w-5" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Product Links */}
+            <div>
+              <h3 className="text-lg font-semibold mb-6">Product</h3>
+              <ul className="space-y-4 text-gray-400">
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#api" className="hover:text-white transition-colors">API</a></li>
+                <li><a href="#integrations" className="hover:text-white transition-colors">Integrations</a></li>
+              </ul>
+            </div>
+
+            {/* Company Links */}
+            <div>
+              <h3 className="text-lg font-semibold mb-6">Company</h3>
+              <ul className="space-y-4 text-gray-400">
+                <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
+                <li><a href="#careers" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#blog" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#press" className="hover:text-white transition-colors">Press</a></li>
+              </ul>
+            </div>
+
+            {/* Support Links */}
+            <div>
+              <h3 className="text-lg font-semibold mb-6">Support</h3>
+              <ul className="space-y-4 text-gray-400">
+                <li><a href="#help" className="hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="#status" className="hover:text-white transition-colors">System Status</a></li>
+                <li><a href="#security" className="hover:text-white transition-colors">Security</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400">&copy; 2025 TraceHerbss. All rights reserved.</p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="#privacy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#terms" className="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+              <a href="#cookies" className="text-gray-400 hover:text-white transition-colors">Cookie Policy</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* QR Scanner Modal */}
+      {isQRScannerOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+        >
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 flex items-center">
+                <QrCode className="mr-3 h-6 w-6 text-green-600" />
+                Scan QR Code
+              </h3>
+              <button
+                onClick={stopQRScanner}
+                className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              {/* Camera Video */}
+              <div className="relative bg-black rounded-lg overflow-hidden">
+                <video
+                  ref={videoRef}
+                  className="w-full h-64 object-cover"
+                  playsInline
+                  muted
+                />
+                
+                {/* Scanning Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-48 h-48 border-2 border-green-500 rounded-lg relative">
+                    <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-green-500 rounded-tl-lg"></div>
+                    <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-green-500 rounded-tr-lg"></div>
+                    <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-green-500 rounded-bl-lg"></div>
+                    <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-green-500 rounded-br-lg"></div>
+                    
+                    {/* Scanning Line Animation */}
+                    <motion.div
+                      className="absolute inset-x-0 h-0.5 bg-green-500"
+                      animate={{ y: [0, 192, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Instructions */}
+              <div className="text-center">
+                <p className="text-gray-600 mb-2">
+                  Position the QR code within the scanning area
+                </p>
+                <div className="flex items-center justify-center space-x-2 text-sm text-green-600">
+                  <div className="animate-pulse w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>Scanning for QR codes...</span>
+                </div>
+              </div>
+              
+              {/* Error Message */}
+              {scanError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <X className="h-5 w-5 text-red-400" />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-red-700">{scanError}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Success Message */}
+              {scannedResult && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <CheckCircle className="h-5 w-5 text-green-400" />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-green-700 font-medium">QR Code Detected!</p>
+                      <p className="text-xs text-green-600 mt-1 break-all">{scannedResult}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Action Buttons */}
+              <div className="flex space-x-3 pt-4">
+                <button
+                  onClick={stopQRScanner}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    // Retry scanning
+                    setScanError(null);
+                    scanQRCode();
+                  }}
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  Retry Scan
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Video Modal */}
+      {isVideoPlaying && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          onClick={() => setIsVideoPlaying(false)}
+        >
+          <div className="bg-white rounded-2xl p-8 max-w-4xl w-full">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold">TraceHerbss Platform Demo</h3>
+              <button
+                onClick={() => setIsVideoPlaying(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center">
+              <div className="text-center text-white">
+                <Play className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg">Video Demo Coming Soon</p>
+                <p className="text-sm opacity-75 mt-2">Experience our platform in action</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Join Us Modal */}
+      {showJoinForm && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowJoinForm(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h3 className="text-3xl font-bold text-gray-900">Join TraceHerbss</h3>
+                <p className="text-gray-600 mt-2">Join as a Laboratory Partner</p>
+              </div>
+              <button
+                onClick={() => setShowJoinForm(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="flex justify-center">
+              {/* Laboratory Option */}
+              <div className="group border-2 border-gray-200 rounded-xl p-8 hover:border-blue-300 transition-all duration-300 cursor-pointer max-w-md w-full">
+                <Link
+                  to="/signup?role=laboratory"
+                  className="block"
+                  onClick={() => setShowJoinForm(false)}
+                >
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                      <Database className="h-10 w-10 text-white" />
+                    </div>
+                    <h4 className="text-2xl font-bold text-gray-900 mb-4">Laboratory Partner</h4>
+                    <p className="text-gray-600 mb-6">
+                      Provide testing services and quality verification for herbal products in our network
+                    </p>
+                    <div className="space-y-3 text-left">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <CheckCircle className="h-5 w-5 text-blue-500 mr-3" />
+                        Quality testing integration
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <CheckCircle className="h-5 w-5 text-blue-500 mr-3" />
+                        Digital certification system
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <CheckCircle className="h-5 w-5 text-blue-500 mr-3" />
+                        Lab management tools
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <CheckCircle className="h-5 w-5 text-blue-500 mr-3" />
+                        Compliance tracking
+                      </div>
+                    </div>
+                    <div className="mt-8">
+                      <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 px-6 rounded-lg font-semibold group-hover:shadow-lg transition-all duration-300">
+                        Join as Laboratory Partner →
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            </div>
+
+            <div className="mt-8 text-center">
+              <p className="text-gray-500 text-sm">
+                Already have an account?{' '}
+                <Link
+                  to="/login"
+                  className="text-green-600 hover:text-green-700 font-medium"
+                  onClick={() => setShowJoinForm(false)}
+                >
+                  Sign in here
+                </Link>
+              </p>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </div>
+  );
+};
+
+export default LandingPage;

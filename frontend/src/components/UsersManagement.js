@@ -37,7 +37,7 @@ const UsersManagement = () => {
     {
       id: 2,
       name: 'Dr. Priya Sharma',
-      email: 'priya.sharma@herbaltrace.com',
+      email: 'priya.sharma@traceherbss.com',
       phone: '+91 98765 43211',
       role: 'admin',
       status: 'active',

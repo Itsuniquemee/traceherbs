@@ -1,0 +1,27 @@
+🚀 Initializing TraceHerbss Backend...
+✨ TraceHerbss Backend initialized
+
+🎯═══════════════════════════════════════════════════════🎯
+🌿         TraceHerbss Backend Server Started!          🌿
+🎯═══════════════════════════════════════════════════════🎯
+🚀 Server: http://localhost:3001
+🏥 Health: http://localhost:3001/api/health
+📚 Docs:   http://localhost:3001/api/docs
+🌍 Env:    development
+📊 DB:     Connecting...
+🎯═══════════════════════════════════════════════════════🎯
+
+✅ MongoDB Connected: localhost
+📝 2025-11-11T06:26:45.450Z - POST /api/auth/login
+📝 2025-11-11T06:27:04.324Z - POST /api/auth/login
+📝 2025-11-11T06:28:47.163Z - POST /api/auth/login
+📝 2025-11-11T06:28:54.895Z - POST /api/auth/login
+📝 2025-11-11T06:29:54.369Z - POST /api/auth/login
+📝 2025-11-11T06:29:55.126Z - POST /api/auth/login
+📝 2025-11-11T06:29:55.915Z - POST /api/auth/login
+📝 2025-11-11T06:29:56.804Z - POST /api/auth/login
+📝 2025-11-11T06:29:57.692Z - POST /api/auth/login
+📝 2025-11-11T06:30:43.103Z - POST /api/auth/login
+📝 2025-11-11T06:31:19.397Z - POST /api/auth/login
+📝 2025-11-11T06:32:37.774Z - POST /api/auth/login
+📝 2025-11-11T06:33:06.714Z - POST /api/auth/login

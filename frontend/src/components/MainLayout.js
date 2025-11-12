@@ -40,7 +40,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
   Lock,
   RefreshCw,
   Search,
-  Filter
+  Filter,
+  Clock
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { toggleFullscreen, isFullscreen, onFullscreenChange, fixMobileViewport } from '../utils/fullscreen';
@@ -187,6 +188,7 @@ const MainLayout = ({ children, currentPage, onPageChange, user, onLogout }) => 
     { id: 'supply-tracking', label: 'Track My Produce', icon: TrendingUp, path: '/farmer/supply-tracking', roles: ['farmer'] },
     { id: 'quality-feedback', label: 'Quality Feedback', icon: MessageSquare, path: '/farmer/feedback', roles: ['farmer'] },
     { id: 'transparency-credits', label: 'Transparency Credits', icon: Award, path: '/farmer/credits', roles: ['farmer'] },
+    { id: 'farmer-generate-qr', label: 'Generate QR Codes', icon: QrCode, path: '/farmer/generate-qr', roles: ['farmer'] },
     
     // Processor-specific features
     { id: 'batch-receiving', label: 'Receive Batches', icon: Package, path: '/processor/receive-batches', roles: ['processor'] },
@@ -211,6 +213,7 @@ const MainLayout = ({ children, currentPage, onPageChange, user, onLogout }) => 
     
     // Admin-specific features
     { id: 'user-management', label: 'User Management', icon: Users, path: '/admin/users', roles: ['admin'] },
+    { id: 'pending-approvals', label: 'Pending Approvals', icon: Clock, path: '/admin/pending-approvals', roles: ['admin'] },
     { id: 'analytics-dashboard', label: 'Analytics Dashboard', icon: BarChart3, path: '/admin/analytics', roles: ['admin'] },
     { id: 'ai-predictions', label: 'AI Predictions', icon: Zap, path: '/admin/ai-predictions', roles: ['admin'] },
     { id: 'system-control', label: 'System Control', icon: Settings, path: '/admin/system', roles: ['admin'] },

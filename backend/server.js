@@ -1,128 +1,213 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const helmet = require('helmet');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
+const http = require('http');
+const socketIo = require('socket.io');
+const path = require('path');
+const winston = require('winston');
+require('dotenv').config();
+
+// Import routes
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
+const farmerRoutes = require('./routes/farmer');
+const processorRoutes = require('./routes/processor');
+const consumerRoutes = require('./routes/consumer');
+const adminRoutes = require('./routes/admin');
+const analyticsRoutes = require('./routes/analytics');
+const traceRoutes = require('./routes/trace');
+const qrRoutes = require('./routes/qr');
+const reportRoutes = require('./routes/reports');
+const notificationRoutes = require('./routes/notifications');
+const uploadRoutes = require('./routes/upload');
+
+// Import middleware
+const { errorHandler, notFound } = require('./middleware/errorHandler');
+const logger = require('./middleware/logger');
+
+// Create Express app
 const app = express();
-const PORT = 5001;
-
-app.use(cors());
-app.use(express.json());
-
-// Sample data for demonstration
-const products = {
-  'batch123': {
-    name: 'Ashwagandha Root',
-    timeline: [
-      { label: 'Harvested', date: '2025-09-01', status: 'complete', icon: '🌱' },
-      { label: 'Lab Tested', date: '2025-09-05', status: 'complete', icon: '🧪' },
-      { label: 'Packaged', date: '2025-09-10', status: 'complete', icon: '📦' },
-      { label: 'Shipped', date: '2025-09-12', status: 'pending', icon: '🚚' }
-    ],
-    geoPath: [
-      [19.076, 72.877], [19.218, 73.164], [19.997, 73.789], [20.5937, 78.9629]
-    ],
-    labResults: [
-      { test: 'Purity', value: 98 },
-      { test: 'Moisture', value: 12 },
-      { test: 'Heavy Metals', value: 0.2 }
-    ],
-    farmer: {
-      name: 'Ravi Patil',
-      region: 'Nashik, Maharashtra',
-      story: 'Ravi has been cultivating Ashwagandha for 15 years using organic methods.',
-      photo: ''
-    },
-    badges: ['Organic', 'Fair Trade', 'Geo-Tagged']
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST"]
   }
-  // Add more batches as needed
+});
+
+// Winston logger configuration
+const winstonLogger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'herbaltrace-backend' },
+  transports: [
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' }),
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
+});
+
+// Security middleware
+app.use(helmet());
+app.use(compression());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
+});
+app.use('/api/', limiter);
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Data sanitization middleware
+app.use(mongoSanitize());
+app.use(xss());
+app.use(hpp());
+
+// CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+      'http://localhost:3001',
+      'https://traceherbs.vercel.app'
+    ];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200
 };
+app.use(cors(corsOptions));
 
-// Dummy collections data
-const collections = [
-  { id: 1, batchId: 'batch123', date: '2025-09-01', farmer: 'Ravi Patil', amount: 100 },
-];
+// Logging middleware
+app.use(logger);
 
-// Dummy quality tests data
-const qualityTests = [
-  { id: 1, batchId: 'batch123', test: 'Purity', value: 98 },
-];
+// Static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Dummy processing steps data
-const processingSteps = [
-  { id: 1, batchId: 'batch123', step: 'Drying', date: '2025-09-02' },
-];
+// Socket.IO connection handling
+io.on('connection', (socket) => {
+  console.log('New client connected:', socket.id);
 
-// Dummy users for auth
-const users = [
-  { username: 'demo', password: 'demo123' }
-];
+  socket.on('join-room', (room) => {
+    socket.join(room);
+    console.log(`Socket ${socket.id} joined room ${room}`);
+  });
 
-// Root route
-app.get('/', (req, res) => {
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+});
+
+// Make io available to routes
+app.set('io', io);
+
+// Database connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/herbaltrace', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log('Connected to MongoDB');
+  winstonLogger.info('Connected to MongoDB');
+})
+.catch((error) => {
+  console.error('MongoDB connection error:', error);
+  winstonLogger.error('MongoDB connection error:', error);
+});
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/farmer', farmerRoutes);
+app.use('/api/processor', processorRoutes);
+app.use('/api/consumer', consumerRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/trace', traceRoutes);
+app.use('/api/qr', qrRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/upload', uploadRoutes);
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
   res.json({
-    message: 'HerbalTrace Backend API',
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// Basic route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Herbal Traceability Backend API',
     version: '1.0.0',
     endpoints: {
-      auth: {
-        login: 'POST /api/auth/login',
-        signup: 'POST /api/auth/signup'
-      },
-      products: 'GET /api/products/:batchId',
-      collection: 'GET /api/collection, POST /api/collection',
-      qualitytest: 'GET /api/qualitytest',
-      processingstep: 'GET /api/processingstep',
-      recall: 'POST /api/recall'
+      auth: '/api/auth',
+      users: '/api/users',
+      farmer: '/api/farmer',
+      processor: '/api/processor',
+      consumer: '/api/consumer',
+      admin: '/api/admin',
+      analytics: '/api/analytics',
+      trace: '/api/trace',
+      qr: '/api/qr',
+      reports: '/api/reports',
+      notifications: '/api/notifications',
+      upload: '/api/upload'
     }
   });
 });
 
-app.get('/api/products/:batchId', (req, res) => {
-  const { batchId } = req.params;
-  const product = products[batchId];
-  if (!product) {
-    return res.status(404).json({ error: 'Product not found' });
-  }
-  res.json(product);
+// 404 handler
+app.use(notFound);
+
+// Error handling middleware (should be last)
+app.use(errorHandler);
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) => {
+  console.log(`Error: ${err.message}`);
+  winstonLogger.error(`Unhandled Promise Rejection: ${err.message}`);
+  // Close server & exit process
+  server.close(() => {
+    process.exit(1);
+  });
 });
 
-app.get('/api/collection', (req, res) => {
-  res.json(collections);
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.log(`Error: ${err.message}`);
+  winstonLogger.error(`Uncaught Exception: ${err.message}`);
+  process.exit(1);
 });
 
-app.get('/api/qualitytest', (req, res) => {
-  res.json(qualityTests);
-});
+const PORT = process.env.PORT || 5000;
 
-app.get('/api/processingstep', (req, res) => {
-  res.json(processingSteps);
-});
-
-app.post('/api/auth/login', (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(u => u.username === username && u.password === password);
-  if (user) return res.json({ success: true, username });
-  res.status(401).json({ success: false, message: 'Invalid credentials' });
-});
-
-app.post('/api/auth/signup', (req, res) => {
-  const { username, password } = req.body;
-  if (users.find(u => u.username === username)) {
-    return res.status(409).json({ success: false, message: 'User exists' });
-  }
-  users.push({ username, password });
-  res.json({ success: true, username });
-});
-
-app.post('/api/collection', (req, res) => {
-  const data = req.body;
-  collections.push({ ...data, id: collections.length + 1 });
-  res.json({ success: true });
-});
-
-app.post('/api/recall', (req, res) => {
-  const { batchId } = req.body;
-  // Simulate recall
-  res.json({ success: true, recalled: batchId });
-});
-
-app.listen(PORT, () => {
-  console.log(`HerbalTrace backend running on http://localhost:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+  winstonLogger.info(`Server started on port ${PORT}`);
 });
