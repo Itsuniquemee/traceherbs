@@ -37,6 +37,7 @@ if (process.env.NODE_ENV !== 'production') {
 // HTTP request logging middleware
 const loggerMiddleware = (req, res, next) => {
   const start = Date.now();
+  const userId = req.user ? req.user._id : 'anonymous';
   
   // Log request
   logger.info({
@@ -44,7 +45,7 @@ const loggerMiddleware = (req, res, next) => {
     url: req.url,
     ip: req.ip || req.connection.remoteAddress,
     userAgent: req.get('User-Agent'),
-    userId: req.user ? req.user._id : 'anonymous',
+    userId,
     timestamp: new Date().toISOString()
   });
 
@@ -60,7 +61,7 @@ const loggerMiddleware = (req, res, next) => {
       statusCode: res.statusCode,
       duration: `${duration}ms`,
       contentLength: res.get('Content-Length') || 0,
-      userId: req.user ? req.user._id : 'anonymous',
+      userId,
       timestamp: new Date().toISOString()
     });
 
