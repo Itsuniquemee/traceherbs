@@ -23,7 +23,8 @@ class QRService {
     this.storeFullData(traceId, fullData);
 
     // Convert to compact string format for QR (only the trace URL)
-        const qrString = `https://traceherbss.com/trace/${traceId}`;
+        const base = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : 'http://localhost:3000';
+        const qrString = `${base}/trace/${traceId}`;
     
     // Validate size
     if (qrString.length > this.maxQRLength) {

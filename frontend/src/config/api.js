@@ -103,7 +103,7 @@ export const apiEndpoints = {
   
   // QR Code & Tracing
   qr: {
-    generate: (batchId) => `${API_BASE_URL}/qr/${batchId}`,
+    generate: (batchId) => `${API_BASE_URL}/qr/generate/${batchId}`,
     scan: `${API_BASE_URL}/qr/scan`,
     validate: `${API_BASE_URL}/qr/validate`
   },
@@ -170,6 +170,45 @@ export const wsConfig = {
   maxReconnectAttempts: 5
 };
 
+// QR Service API
+export const qrAPI = {
+  // Generate QR code for batch
+  generateQR: async (batchId) => {
+    const response = await apiClient.post('/qr/generate', { batchId });
+    return response.data;
+  },
+
+  // Generate QR by batch ID (alternative endpoint)
+  generateQRByBatch: async (batchId) => {
+    const response = await apiClient.post(`/qr/generate/${batchId}`);
+    return response.data;
+  },
+
+  // Scan/verify QR code
+  scanQR: async (qrData) => {
+    const response = await apiClient.post('/qr/scan', { qrData });
+    return response.data;
+  },
+
+  // Verify QR authenticity
+  verifyQR: async (qrData) => {
+    const response = await apiClient.post('/qr/verify', { qrData });
+    return response.data;
+  },
+
+  // Get QR analytics
+  getAnalytics: async (batchId) => {
+    const response = await apiClient.get(`/qr/analytics/${batchId}`);
+    return response.data;
+  },
+
+  // Validate QR format
+  validateFormat: async (qrCode) => {
+    const response = await apiClient.post('/qr/validate', { qrCode });
+    return response.data;
+  }
+};
+
 // Export the configured axios client
 export { apiClient };
 
@@ -179,5 +218,6 @@ export default {
   authHelpers,
   wsConfig,
   apiClient,
+  qrAPI,
   API_BASE_URL
 };

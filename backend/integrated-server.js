@@ -29,6 +29,8 @@ const notificationRoutes = require('./routes/notifications');
 const uploadRoutes = require('./routes/upload');
 const userRoutes = require('./routes/users');
 const reportRoutes = require('./routes/reports');
+const collectionRoutes = require('./routes/collection');
+const fhirRoutes = require('./routes/fhir');
 
 // Security middleware
 app.use(helmet({
@@ -196,6 +198,8 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/collection', collectionRoutes);
+app.use('/api/fhir', fhirRoutes);
 
 // API documentation endpoint
 app.get('/api/docs', (req, res) => {
@@ -262,6 +266,14 @@ app.get('/api/docs', (req, res) => {
           'GET /api/admin/batches - All system batches',
           'GET /api/admin/analytics - Platform analytics',
           'GET /api/admin/reports - System reports'
+        ]
+      },
+      collection: {
+        description: 'Geo-tagged collection events and FHIR bundles',
+        endpoints: [
+          'POST /api/collection - record a geo-tagged collection event',
+          'GET /api/collection?batchId=... - list collection events',
+          'GET /api/fhir/bundle/:batchId - FHIR-style provenance bundle'
         ]
       }
     },

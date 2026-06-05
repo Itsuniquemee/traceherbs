@@ -664,277 +664,317 @@ const PASLandingPage = () => {
           paddingBottom: '2rem'
         }}
       >
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Floating Particles */}
-          {Array.from({ length: 20 }, (_, i) => (
-            <motion.div
-              key={`hero-particle-${i}`}
-              className="absolute w-2 h-2 bg-red-400 rounded-full opacity-20"
-              initial={{
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-              }}
-              animate={{
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-              }}
-              transition={{
-                duration: Math.random() * 20 + 10,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-          ))}
-          
-          {/* Gradient Orbs */}
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-red-400/20 to-orange-400/20 rounded-full blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut"
+        {/* Subtle geometric background elements */}
+        <div className="absolute inset-0 overflow-hidden opacity-30">
+          <div 
+            className="absolute top-20 left-20 w-96 h-96 rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%)'
             }}
           />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-orange-400/20 to-yellow-400/20 rounded-full blur-3xl"
-            animate={{
-              scale: [1.2, 1, 1.2],
-              opacity: [0.2, 0.4, 0.2],
+          <div 
+            className="absolute bottom-20 right-20 w-80 h-80 rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)'
             }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut"
+          />
+          <div 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rotate-45"
+            style={{
+              background: 'linear-gradient(45deg, rgba(16, 185, 129, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)',
+              clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
             }}
           />
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 container container-7xl" style={{ maxWidth: '1200px', padding: '0 2rem', margin: '0 auto' }}>
-          <div className="hero-grid" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', textAlign: 'center' }}>
-            <motion.div 
-              className="hero-content"
-              style={{ width: '100%', maxWidth: '800px' }}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-            >
+        {/* Two-Column Hero Layout */}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center min-h-[calc(100vh-8rem)]">
+            
+            {/* Left Column - Content (60%) */}
+            <div className="lg:col-span-3">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="mb-6"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="max-w-2xl"
               >
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                  <AlertTriangle className="h-4 w-4" />
-                  Supply Chain Crisis Alert
-                </div>
-              </motion.div>
-
-              <motion.h1
-                className="heading-display mb-8"
-                style={{
-                  textAlign: 'center',
-                  maxWidth: '900px',
-                  margin: '0 auto 2rem auto',
-                  background: 'var(--gradient-hero)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                Transform Your Herbal Supply Chain with{' '}
-                <span style={{ 
-                  background: 'var(--gradient-cta)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}>
-                  Complete Traceability
-                </span>
-              </motion.h1>
-
-              <motion.p
-                className="text-lead mb-8"
-                style={{
-                  fontSize: 'var(--font-size-body-lg)',
-                  lineHeight: 'var(--line-height-body-lg)',
-                  color: 'var(--color-gray-600)',
-                  textAlign: 'center',
-                  maxWidth: '700px',
-                  margin: '0 auto 2rem auto',
-                  fontWeight: 'var(--font-weight-regular)'
-                }}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-              >
-                Join 500+ herbal companies using blockchain technology to achieve{' '}
-                <span style={{ fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-emerald-600)' }}>
-                  100% supply chain transparency, reduce compliance costs by 60%, and eliminate contamination risks.
-                </span>
-              </motion.p>
-
-              <motion.p
-                className="text-body mb-12 text-gray-600"
-                style={{
-                  fontSize: '1.1rem',
-                  lineHeight: '1.6',
-                  color: '#6b7280',
-                  textAlign: 'center',
-                  maxWidth: '600px',
-                  margin: '0 auto 3rem auto'
-                }}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1 }}
-              >
-                When recalls happen, you're scrambling through paperwork, losing millions, 
-                and watching your reputation crumble—all because you can't trace a single batch.
-              </motion.p>
-
-              {/* CTA Buttons */}
-              <motion.div
-                className="flex flex-col sm:flex-row gap-4 mb-12"
-                style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '3rem' }}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.2 }}
-              >
-                <motion.button
-                  onClick={() => setShowJoinForm(true)}
-                  className="btn btn-primary btn-xl btn-magnetic"
-                  style={{
-                    padding: '1rem 2rem',
-                    fontSize: 'var(--font-size-body-lg)',
-                    fontWeight: 'var(--font-weight-semibold)',
-                    background: 'var(--color-emerald-500)',
-                    color: 'var(--color-white)',
-                    border: 'none',
-                    borderRadius: '0.75rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)'
-                  }}
-                  whileHover={{ 
-                    scale: 1.05,
-                    backgroundColor: 'var(--color-emerald-600)',
-                    boxShadow: '0 15px 35px rgba(16, 185, 129, 0.4)'
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Zap className="h-6 w-6" />
-                  Start Free Trial
-                </motion.button>
-                
-                <motion.button
-                  onClick={() => setIsVideoPlaying(true)}
-                  className="btn btn-secondary btn-xl"
-                  style={{
-                    padding: '1rem 2rem',
-                    fontSize: 'var(--font-size-body-lg)',
-                    fontWeight: 'var(--font-weight-semibold)',
-                    background: 'transparent',
-                    color: 'var(--color-gray-700)',
-                    border: '2px solid var(--color-emerald-500)',
-                    borderRadius: '0.75rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    transition: 'all 0.3s ease'
-                  }}
-                  whileHover={{ 
-                    scale: 1.05,
-                    backgroundColor: 'var(--color-emerald-50)',
-                    borderColor: 'var(--color-emerald-600)'
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Play className="h-6 w-6" />
-                  Watch 3-Min Demo
-                </motion.button>
-              </motion.div>
-
-              {/* Professional Trust Indicators */}
-              <motion.div
-                className="flex flex-wrap items-center justify-center gap-8 text-sm"
-                style={{
-                  color: 'var(--color-gray-600)',
-                  fontSize: 'var(--font-size-sm)',
-                  fontWeight: 'var(--font-weight-medium)',
-                  marginTop: '2rem'
-                }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.4 }}
-              >
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4" style={{ color: 'var(--color-emerald-500)' }} />
-                  <span>Free 30-Day Trial</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Rocket className="h-4 w-4" style={{ color: 'var(--color-blue-500)' }} />
-                  <span>Setup in 48 Hours</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  500+ Companies Trust Us
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Hero Visual */}
-            <motion.div 
-              className="hero-visual"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.4 }}
-            >
-              <div className="relative">
-                {/* Interactive Dashboard Preview */}
+                {/* Crisis Alert Banner */}
                 <motion.div
-                  className="card card-glass p-8 backdrop-blur-xl"
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-2 bg-red-50 text-red-700 px-4 py-2 rounded-full border border-red-200 mb-6"
                 >
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-semibold text-gray-800">Supply Chain Status</h3>
-                    <div className="flex items-center gap-2 text-red-500">
-                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                      Crisis Mode
+                  <AlertTriangle className="h-4 w-4" />
+                  <span className="text-sm font-medium">Supply Chain Crisis Alert</span>
+                </motion.div>
+
+                {/* Pre-headline */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-50 to-blue-50 px-4 py-2 rounded-full border border-emerald-200 mb-6"
+                >
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                  <span className="text-sm font-medium text-emerald-700">
+                    #1 Herbal Supply Chain Platform
+                  </span>
+                </motion.div>
+
+                {/* Main Headline */}
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                  <span className="text-gray-900">Transform Your</span>
+                  <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-blue-600">
+                    Herbal Supply Chain
+                  </span>
+                  <br />
+                  <span className="text-gray-900">with Complete</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-blue-600">
+                    {" "}Traceability
+                  </span>
+                </h1>
+
+                {/* Subheadline */}
+                <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
+                  End-to-end visibility from farm to pharmacy. Track, verify, and optimize 
+                  your herbal products with blockchain-powered transparency that builds trust 
+                  and ensures compliance.
+                </p>
+
+                {/* Key Benefits */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                  {[
+                    { icon: "🔗", text: "Complete Chain Visibility" },
+                    { icon: "🛡️", text: "Blockchain Security" },
+                    { icon: "📊", text: "Real-time Analytics" },
+                    { icon: "✅", text: "Compliance Ready" }
+                  ].map((benefit, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 + index * 0.1 }}
+                      className="flex items-center gap-3"
+                    >
+                      <span className="text-xl">{benefit.icon}</span>
+                      <span className="text-gray-700 font-medium">{benefit.text}</span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    onClick={() => setShowJoinForm(true)}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--primary-color) 0%, #059669 100%)',
+                      boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)'
+                    }}
+                  >
+                    🚀 Start Free Trial
+                  </motion.button>
+                  
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    onClick={() => setIsVideoPlaying(true)}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-blue-600"
+                    style={{
+                      borderColor: 'var(--secondary-color)',
+                      color: 'var(--secondary-color)'
+                    }}
+                  >
+                    📊 View Live Demo
+                  </motion.button>
+                </div>
+
+                {/* Trust Indicators */}
+                <div className="pt-6 border-t border-gray-200">
+                  <p className="text-sm text-gray-500 mb-4">Trusted by leading herbal companies worldwide</p>
+                  <div className="flex flex-wrap gap-6 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>99.9% Uptime SLA</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span>ISO 27001 Certified</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <span>GDPR Compliant</span>
                     </div>
                   </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Column - Visual (40%) */}
+            <div className="lg:col-span-2">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="relative"
+              >
+                {/* Dashboard Mockup Container */}
+                <div className="relative bg-white rounded-2xl shadow-2xl p-6 border border-gray-100">
                   
-                  {/* Mock Dashboard Elements */}
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                      <span className="text-sm text-red-700">Contamination Alert</span>
-                      <span className="text-sm font-semibold text-red-600">73% Risk</span>
+                  {/* Dashboard Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
+                        <span className="text-white text-sm font-bold">H</span>
+                      </div>
+                      <span className="font-semibold text-gray-900">Supply Chain Dashboard</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
-                      <span className="text-sm text-orange-700">Traceability Gap</span>
-                      <span className="text-sm font-semibold text-orange-600">Unknown Origin</span>
+                    <div className="flex gap-2">
+                      <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                      <span className="text-sm text-red-700">Financial Loss</span>
-                      <span className="text-sm font-semibold text-red-600">$2.8B Industry</span>
+                  </div>
+
+                  {/* Supply Chain Map Visualization */}
+                  <div className="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-xl p-4 mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-semibold text-gray-700">Live Tracking Map</h3>
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Live</span>
                     </div>
+                    
+                    {/* Interactive Supply Chain Nodes */}
+                    <div className="relative h-32 bg-white rounded-lg border border-emerald-200 p-3">
+                      <div className="flex items-center justify-between h-full">
+                        {/* Farm */}
+                        <div className="text-center">
+                          <div className="w-8 h-8 bg-green-500 rounded-full mx-auto mb-2 flex items-center justify-center animate-pulse">
+                            <span className="text-white text-xs">🌱</span>
+                          </div>
+                          <span className="text-xs text-gray-600">Farm</span>
+                        </div>
+                        
+                        {/* Processing */}
+                        <div className="flex-1 h-0.5 bg-gradient-to-r from-green-300 to-blue-300 mx-2 relative">
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                        </div>
+                        
+                        <div className="text-center">
+                          <div className="w-8 h-8 bg-blue-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                            <span className="text-white text-xs">⚙️</span>
+                          </div>
+                          <span className="text-xs text-gray-600">Processing</span>
+                        </div>
+                        
+                        <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-300 to-purple-300 mx-2"></div>
+                        
+                        {/* Distribution */}
+                        <div className="text-center">
+                          <div className="w-8 h-8 bg-purple-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                            <span className="text-white text-xs">📦</span>
+                          </div>
+                          <span className="text-xs text-gray-600">Distribution</span>
+                        </div>
+                        
+                        <div className="flex-1 h-0.5 bg-gradient-to-r from-purple-300 to-emerald-300 mx-2"></div>
+                        
+                        {/* Retail */}
+                        <div className="text-center">
+                          <div className="w-8 h-8 bg-emerald-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                            <span className="text-white text-xs">🏪</span>
+                          </div>
+                          <span className="text-xs text-gray-600">Retail</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Batch Tracking Interface */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-gray-700">Recent Batches</h3>
+                      <span className="text-xs text-blue-600 cursor-pointer hover:underline">View All</span>
+                    </div>
+                    
+                    {/* Batch Items */}
+                    {[
+                      { id: "HB001", product: "Turmeric Powder", status: "In Transit", progress: 75 },
+                      { id: "HB002", product: "Ginger Extract", status: "Processing", progress: 45 },
+                      { id: "HB003", product: "Ashwagandha", status: "Delivered", progress: 100 }
+                    ].map((batch, index) => (
+                      <motion.div
+                        key={batch.id}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.8 + index * 0.1 }}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-mono text-gray-500">{batch.id}</span>
+                            <span className="text-sm font-medium text-gray-900">{batch.product}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                              <div 
+                                className="h-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500"
+                                style={{ width: `${batch.progress}%` }}
+                              />
+                            </div>
+                            <span className="text-xs text-gray-600">{batch.progress}%</span>
+                          </div>
+                        </div>
+                        <div className="ml-3">
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            batch.status === 'Delivered' ? 'bg-green-100 text-green-700' :
+                            batch.status === 'In Transit' ? 'bg-blue-100 text-blue-700' :
+                            'bg-yellow-100 text-yellow-700'
+                          }`}>
+                            {batch.status}
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Floating Stats Cards */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2 }}
+                  className="absolute -top-4 -right-4 bg-white rounded-xl shadow-lg p-4 border border-gray-100"
+                >
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-emerald-600">98.5%</div>
+                    <div className="text-xs text-gray-600">Traceability</div>
                   </div>
                 </motion.div>
-              </div>
-            </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.4 }}
+                  className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg p-4 border border-gray-100"
+                >
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">24/7</div>
+                    <div className="text-xs text-gray-600">Monitoring</div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
 

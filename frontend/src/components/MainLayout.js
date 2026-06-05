@@ -182,53 +182,53 @@ const MainLayout = ({ children, currentPage, onPageChange, user, onLogout }) => 
     { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard', roles: ['admin', 'farmer', 'consumer', 'processor', 'regulator'] },
     
     // Farmer-specific features
-    { id: 'crop-upload', label: 'Upload Crop Details', icon: Upload, path: '/farmer/crop-upload', roles: ['farmer'] },
-    { id: 'harvest-data', label: 'Harvest Records', icon: Leaf, path: '/farmer/harvest-data', roles: ['farmer'] },
-    { id: 'farm-documents', label: 'Farm Documents', icon: FileText, path: '/farmer/documents', roles: ['farmer'] },
-    { id: 'supply-tracking', label: 'Track My Produce', icon: TrendingUp, path: '/farmer/supply-tracking', roles: ['farmer'] },
-    { id: 'quality-feedback', label: 'Quality Feedback', icon: MessageSquare, path: '/farmer/feedback', roles: ['farmer'] },
-    { id: 'transparency-credits', label: 'Transparency Credits', icon: Award, path: '/farmer/credits', roles: ['farmer'] },
-    { id: 'farmer-generate-qr', label: 'Generate QR Codes', icon: QrCode, path: '/farmer/generate-qr', roles: ['farmer'] },
+    { id: 'crop-upload', label: 'Upload Crop Details', icon: Upload, path: '/app/farmer/crop-upload', roles: ['farmer'] },
+    { id: 'harvest-data', label: 'Harvest Records', icon: Leaf, path: '/app/farmer/harvest-data', roles: ['farmer'] },
+    { id: 'farm-documents', label: 'Farm Documents', icon: FileText, path: '/app/farmer/documents', roles: ['farmer'] },
+    { id: 'supply-tracking', label: 'Track My Produce', icon: TrendingUp, path: '/app/farmer/supply-tracking', roles: ['farmer'] },
+    { id: 'quality-feedback', label: 'Quality Feedback', icon: MessageSquare, path: '/app/farmer/feedback', roles: ['farmer'] },
+    { id: 'transparency-credits', label: 'Transparency Credits', icon: Award, path: '/app/farmer/credits', roles: ['farmer'] },
+    { id: 'farmer-generate-qr', label: 'Generate QR Codes', icon: QrCode, path: '/app/farmer/generate-qr', roles: ['farmer'] },
     
     // Processor-specific features
-    { id: 'batch-receiving', label: 'Receive Batches', icon: Package, path: '/processor/receive-batches', roles: ['processor'] },
-    { id: 'processing-steps', label: 'Processing Records', icon: Activity, path: '/processor/processing-steps', roles: ['processor'] },
-    { id: 'quality-tests', label: 'Quality Tests', icon: CheckCircle, path: '/processor/quality-tests', roles: ['processor'] },
-    { id: 'generate-qr', label: 'Generate QR Codes', icon: QrCode, path: '/processor/generate-qr', roles: ['processor'] },
-    { id: 'chain-custody', label: 'Chain of Custody', icon: Shield, path: '/processor/chain-custody', roles: ['processor'] },
+    { id: 'batch-receiving', label: 'Receive Batches', icon: Package, path: '/app/processor/receive-batches', roles: ['processor'] },
+    { id: 'processing-steps', label: 'Processing Records', icon: Activity, path: '/app/processor/processing-steps', roles: ['processor'] },
+    { id: 'quality-tests', label: 'Quality Tests', icon: CheckCircle, path: '/app/processor/quality-tests', roles: ['processor'] },
+    { id: 'generate-qr', label: 'Generate QR Codes', icon: QrCode, path: '/app/processor/generate-qr', roles: ['processor'] },
+    { id: 'chain-custody', label: 'Chain of Custody', icon: Shield, path: '/app/processor/chain-custody', roles: ['processor'] },
     
     // Regulator-specific features
-    { id: 'live-monitoring', label: 'Live Monitoring', icon: Eye, path: '/regulator/live-monitoring', roles: ['regulator'] },
-    { id: 'audit-trails', label: 'Audit Trails', icon: Search, path: '/regulator/audit-trails', roles: ['regulator'] },
-    { id: 'batch-approval', label: 'Batch Approval', icon: CheckCircle, path: '/regulator/batch-approval', roles: ['regulator'] },
-    { id: 'fraud-alerts', label: 'Fraud Detection', icon: AlertTriangle, path: '/regulator/fraud-alerts', roles: ['regulator'] },
-    { id: 'certification-verify', label: 'Verify Certifications', icon: Award, path: '/regulator/certifications', roles: ['regulator'] },
+    { id: 'live-monitoring', label: 'Live Monitoring', icon: Eye, path: '/app/regulator/live-monitoring', roles: ['regulator'] },
+    { id: 'audit-trails', label: 'Audit Trails', icon: Search, path: '/app/regulator/audit-trails', roles: ['regulator'] },
+    { id: 'batch-approval', label: 'Batch Approval', icon: CheckCircle, path: '/app/regulator/batch-approval', roles: ['regulator'] },
+    { id: 'fraud-alerts', label: 'Fraud Detection', icon: AlertTriangle, path: '/app/regulator/fraud-alerts', roles: ['regulator'] },
+    { id: 'certification-verify', label: 'Verify Certifications', icon: Award, path: '/app/regulator/certifications', roles: ['regulator'] },
     
     // Consumer-specific features
-    { id: 'product-scanner', label: 'Scan Products', icon: Camera, path: '/consumer/scanner', roles: ['consumer'] },
-    { id: 'product-comparison', label: 'Compare Products', icon: BarChart3, path: '/consumer/compare', roles: ['consumer'] },
-    { id: 'authenticity-check', label: 'Authenticity Check', icon: Shield, path: '/consumer/authenticity', roles: ['consumer'] },
-    { id: 'product-reviews', label: 'Reviews & Ratings', icon: Star, path: '/consumer/reviews', roles: ['consumer'] },
-    { id: 'fraud-reporting', label: 'Report Fraud', icon: XCircle, path: '/consumer/report-fraud', roles: ['consumer'] },
+    { id: 'product-scanner', label: 'Scan Products', icon: Camera, path: '/app/consumer/scanner', roles: ['consumer'] },
+    { id: 'product-comparison', label: 'Compare Products', icon: BarChart3, path: '/app/consumer/compare', roles: ['consumer'] },
+    { id: 'authenticity-check', label: 'Authenticity Check', icon: Shield, path: '/app/consumer/authenticity', roles: ['consumer'] },
+    { id: 'product-reviews', label: 'Reviews & Ratings', icon: Star, path: '/app/consumer/reviews', roles: ['consumer'] },
+    { id: 'fraud-reporting', label: 'Report Fraud', icon: XCircle, path: '/app/consumer/report-fraud', roles: ['consumer'] },
     
     // Admin-specific features
-    { id: 'user-management', label: 'User Management', icon: Users, path: '/admin/users', roles: ['admin'] },
-    { id: 'pending-approvals', label: 'Pending Approvals', icon: Clock, path: '/admin/pending-approvals', roles: ['admin'] },
-    { id: 'analytics-dashboard', label: 'Analytics Dashboard', icon: BarChart3, path: '/admin/analytics', roles: ['admin'] },
-    { id: 'ai-predictions', label: 'AI Predictions', icon: Zap, path: '/admin/ai-predictions', roles: ['admin'] },
-    { id: 'system-control', label: 'System Control', icon: Settings, path: '/admin/system', roles: ['admin'] },
-    { id: 'cybersecurity', label: 'Security Monitoring', icon: Lock, path: '/admin/security', roles: ['admin'] },
-    { id: 'integration-hub', label: 'Integration Hub', icon: Globe, path: '/admin/integrations', roles: ['admin'] },
+    { id: 'user-management', label: 'User Management', icon: Users, path: '/app/admin/users', roles: ['admin'] },
+    { id: 'pending-approvals', label: 'Pending Approvals', icon: Clock, path: '/app/admin/pending-approvals', roles: ['admin'] },
+    { id: 'analytics-dashboard', label: 'Analytics Dashboard', icon: BarChart3, path: '/app/admin/analytics', roles: ['admin'] },
+    { id: 'ai-predictions', label: 'AI Predictions', icon: Zap, path: '/app/admin/ai-predictions', roles: ['admin'] },
+    { id: 'system-control', label: 'System Control', icon: Settings, path: '/app/admin/system', roles: ['admin'] },
+    { id: 'cybersecurity', label: 'Security Monitoring', icon: Lock, path: '/app/admin/security', roles: ['admin'] },
+    { id: 'integration-hub', label: 'Integration Hub', icon: Globe, path: '/app/admin/integrations', roles: ['admin'] },
     
     // Shared features
-    { id: 'qr-scanner', label: 'QR Scanner', icon: Camera, path: '/qr-scanner', roles: ['admin', 'farmer', 'consumer', 'processor'] },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/analytics', roles: ['admin', 'processor', 'regulator'] },
-    { id: 'reports', label: 'Reports', icon: FileText, path: '/reports', roles: ['admin', 'processor', 'regulator'] },
-    { id: 'recall', label: 'Recall Simulation', icon: AlertTriangle, path: '/recall', roles: ['admin', 'regulator'] },
+    { id: 'qr-scanner', label: 'QR Scanner', icon: Camera, path: '/app/qr-scanner', roles: ['admin', 'farmer', 'consumer', 'processor'] },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/app/analytics', roles: ['admin', 'processor', 'regulator'] },
+    { id: 'reports', label: 'Reports', icon: FileText, path: '/app/reports', roles: ['admin', 'processor', 'regulator'] },
+    { id: 'recall', label: 'Recall Simulation', icon: AlertTriangle, path: '/app/recall', roles: ['admin', 'regulator'] },
     
     // Universal features
-    { id: 'profile', label: 'Profile', icon: User, path: '/profile', roles: ['admin', 'farmer', 'consumer', 'processor', 'regulator'] },
-    { id: 'settings', label: 'Settings', icon: Settings, path: '/settings', roles: ['admin', 'farmer', 'consumer', 'processor', 'regulator'] }
+    { id: 'profile', label: 'Profile', icon: User, path: '/app/profile', roles: ['admin', 'farmer', 'consumer', 'processor', 'regulator'] },
+    { id: 'settings', label: 'Settings', icon: Settings, path: '/app/settings', roles: ['admin', 'farmer', 'consumer', 'processor', 'regulator'] }
   ];
 
   // Filter navigation items based on user role

@@ -158,6 +158,60 @@ router.post('/receive-batch', authenticate, authorize('processor', 'admin'), [
   }
 });
 
+// Alias to support existing frontend service: POST /processor/receive
+router.post('/receive', authenticate, authorize('processor', 'admin'), [
+  body('batchId').notEmpty().withMessage('Batch ID is required'),
+  body('receivedQuantity').isNumeric().withMessage('Received quantity must be a number'),
+  body('qualityCheck.condition').isIn(['excellent', 'good', 'fair', 'poor']).withMessage('Invalid quality condition'),
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, message: 'Validation error', errors: errors.array() });
+    }
+
+    const { batchId, receivedQuantity, qualityCheck, notes } = req.body;
+    const processorId = req.user._id;
+
+    const batch = await Batch.findOne({ batchId });
+    if (!batch) return res.status(404).json({ success: false, message: 'Batch not found' });
+
+    const processor = await User.findById(processorId);
+    batch.processing.push({
+      processorId,
+      processType: 'receiving',
+      date: new Date(),
+      location: processor.processorProfile?.companyName || processor.fullName,
+      method: 'batch_receipt',
+      notes,
+      qualityBefore: qualityCheck,
+      qualityAfter: qualityCheck
+    });
+
+    batch.supply_chain.push({
+      step: batch.supply_chain.length + 1,
+      entity: {
+        type: 'processor',
+        id: processorId,
+        name: processor.fullName,
+        location: processor.address?.city || 'Processing Facility'
+      },
+      action: 'receive',
+      date: new Date(),
+      quantity: receivedQuantity,
+      notes: `Received batch for processing. Quality: ${qualityCheck.condition}`
+    });
+
+    batch.status = 'in_processing';
+    await batch.save();
+
+    res.json({ success: true, message: 'Batch received successfully', data: batch });
+  } catch (error) {
+    console.error('Receive batch (alias) error:', error);
+    res.status(500).json({ success: false, message: 'Error receiving batch' });
+  }
+});
+
 // @desc    Add processing step to batch
 // @route   POST /api/processor/processing-step
 // @access  Private (Processor, Admin)

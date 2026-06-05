@@ -67,7 +67,7 @@ const Login = ({ onLogin, onSignupClick, isLoading = false }) => {
       // Role-based redirection after successful login
       console.log('🎯 Redirecting user based on role:', result.user.role);
       setTimeout(() => {
-        switch (user.role) {
+        switch (result.user.role) {
             case 'admin':
             navigate('/app/admin/pending-approvals', { replace: true });
             break;
