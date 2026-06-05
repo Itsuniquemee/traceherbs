@@ -14,6 +14,13 @@ import { TraceHerbsProvider, useAuth } from './hooks/useTraceHerbs';
 // Import components
 import PASLandingPage from './components/PASLandingPage';
 import LandingPage from './components/LandingPage';
+
+// Import marketing pages
+import HomePage from './pages/marketing/HomePage';
+import FeaturesPage from './pages/marketing/FeaturesPage';
+import HowItWorksPage from './pages/marketing/HowItWorksPage';
+import PricingPage from './pages/marketing/PricingPage';
+import ResourcesPage from './pages/marketing/ResourcesPage';
 import ModernDashboard from './components/ModernDashboard';
 import CollectionForm from './components/CollectionForm';
 import ConsumerPortal from './components/ConsumerPortal';
@@ -49,6 +56,13 @@ import ProcessorRecords from './components/processor/ProcessorRecords';
 import ProcessorQualityTests from './components/processor/ProcessorQualityTests';
 import ProcessorQRGeneration from './components/processor/ProcessorQRGeneration';
 import ProcessorChainOfCustody from './components/processor/ProcessorChainOfCustody';
+
+// Import consumer components
+import ConsumerScanner from './components/consumer/ConsumerScanner';
+import ConsumerCompare from './components/consumer/ConsumerCompare';
+import ConsumerAuthenticity from './components/consumer/ConsumerAuthenticity';
+import ConsumerReviews from './components/consumer/ConsumerReviews';
+import ConsumerReportFraud from './components/consumer/ConsumerReportFraud';
 
 // Import admin components
 import AdminUserManagement from './components/AdminUserManagement';
@@ -101,8 +115,13 @@ const AppWrapper = ({ user, onLogout, onProfileUpdate }) => {
 
   return (
     <Routes>
-      {/* Landing page - always shown first, no layout wrapper */}
-      <Route path="/" element={<PASLandingPage />} />
+      {/* Marketing Pages */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/features" element={<FeaturesPage />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/resources" element={<ResourcesPage />} />      {/* Legacy landing pages */}
+      <Route path="/pas-landing" element={<PASLandingPage />} />
       <Route path="/home" element={<PASLandingPage />} />
       
       {/* Login and Signup routes - no layout */}
@@ -212,38 +231,65 @@ const AppWrapper = ({ user, onLogout, onProfileUpdate }) => {
           </ProtectedRoute>
         } />
         
+        {/* Consumer specific routes */}
+        <Route path="consumer/scanner" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
+            <ConsumerScanner />
+          </ProtectedRoute>
+        } />
+        <Route path="consumer/compare" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
+            <ConsumerCompare />
+          </ProtectedRoute>
+        } />
+        <Route path="consumer/authenticity" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
+            <ConsumerAuthenticity />
+          </ProtectedRoute>
+        } />
+        <Route path="consumer/reviews" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
+            <ConsumerReviews />
+          </ProtectedRoute>
+        } />
+        <Route path="consumer/report-fraud" element={
+          <ProtectedRoute user={user} requiredRoles={['admin', 'consumer']}>
+            <ConsumerReportFraud />
+          </ProtectedRoute>
+        } />
+        
         {/* Admin specific routes */}
-        <Route path="/admin/users" element={
+        <Route path="admin/users" element={
           <ProtectedRoute user={user} requiredRoles={['admin']}>
             <AdminUserManagement />
           </ProtectedRoute>
         } />
-        <Route path="/admin/pending-approvals" element={
+        <Route path="admin/pending-approvals" element={
           <ProtectedRoute user={user} requiredRoles={['admin']}>
             <AdminPendingApprovals />
           </ProtectedRoute>
         } />
-        <Route path="/admin/analytics" element={
+        <Route path="admin/analytics" element={
           <ProtectedRoute user={user} requiredRoles={['admin']}>
             <AdminAnalyticsDashboard />
           </ProtectedRoute>
         } />
-        <Route path="/admin/ai-predictions" element={
+        <Route path="admin/ai-predictions" element={
           <ProtectedRoute user={user} requiredRoles={['admin']}>
             <AdminAIPredictions />
           </ProtectedRoute>
         } />
-        <Route path="/admin/system" element={
+        <Route path="admin/system" element={
           <ProtectedRoute user={user} requiredRoles={['admin']}>
             <AdminSystemControl />
           </ProtectedRoute>
         } />
-        <Route path="/admin/security" element={
+        <Route path="admin/security" element={
           <ProtectedRoute user={user} requiredRoles={['admin']}>
             <AdminSecurityMonitoring />
           </ProtectedRoute>
         } />
-        <Route path="/admin/integrations" element={
+        <Route path="admin/integrations" element={
           <ProtectedRoute user={user} requiredRoles={['admin']}>
             <AdminIntegrationHub />
           </ProtectedRoute>

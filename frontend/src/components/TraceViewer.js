@@ -12,29 +12,49 @@ import {
   Package
 } from 'lucide-react';
 import qrService from '../utils/QRService';
+import { apiClient } from '../config/api';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Polyline, Marker, Popup } from 'react-leaflet';
 
 const TraceViewer = () => {
   const { traceId } = useParams();
   const [traceData, setTraceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [backendTrace, setBackendTrace] = useState(null);
 
   useEffect(() => {
-    if (traceId) {
-      // Get trace data from QRService
+    const load = async () => {
+      if (!traceId) {
+        setError('No trace ID provided');
+        setLoading(false);
+        return;
+      }
+
+      // Try backend first: treat traceId as batchId when present in backend
+      try {
+        const resp = await apiClient.get(`/trace/${traceId}`);
+        if (resp?.data?.success) {
+          setBackendTrace(resp.data.data);
+          setError(null);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        // ignore; fallback to local store
+      }
+
+      // Fallback to local QRService store (for locally generated demo traces)
       const data = qrService.getFullData(traceId);
-      
       if (data) {
         setTraceData(data);
         setError(null);
       } else {
-        setError('Trace data not found. This trace may have been created on a different device or the data may have been cleared.');
+        setError('Trace not found in backend or local storage.');
       }
-    } else {
-      setError('No trace ID provided');
-    }
-    
-    setLoading(false);
+      setLoading(false);
+    };
+    load();
   }, [traceId]);
 
   if (loading) {
@@ -67,6 +87,78 @@ const TraceViewer = () => {
             <span>Go Back</span>
           </button>
         </motion.div>
+      </div>
+    );
+  }
+
+  // Backend-rendered view with map if available
+  if (backendTrace) {
+    const path = backendTrace.geoPath || [];
+    const center = path.length ? path[0] : [20.5937, 78.9629];
+
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+            <h1 className="text-3xl font-bold text-foreground mb-2">Product Verification</h1>
+            <p className="text-muted-foreground">Batch ID: <span className="font-mono text-sm bg-muted px-2 py-1 rounded">{backendTrace.batchId}</span></p>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">{backendTrace.product.name}</h2>
+                <p className="text-muted-foreground">{backendTrace.product.scientificName}</p>
+              </div>
+              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Verified</span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-sm"><span className="text-muted-foreground">Farmer</span><div className="font-medium">{backendTrace.farmer.name}</div></div>
+              <div className="text-sm"><span className="text-muted-foreground">Region</span><div className="font-medium">{backendTrace.farmer.region}</div></div>
+              <div className="text-sm"><span className="text-muted-foreground">Status</span><div className="font-medium">{backendTrace.status}</div></div>
+              <div className="text-sm"><span className="text-muted-foreground">Visibility</span><div className="font-medium">{backendTrace.visibility}</div></div>
+            </div>
+          </motion.div>
+
+          {/* Interactive Map */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold text-foreground mb-4">Geo Path</h3>
+            <div className="h-80 rounded overflow-hidden">
+              <MapContainer center={center} zoom={5} style={{ height: '100%', width: '100%' }}>
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
+                {path.length > 0 && (
+                  <>
+                    <Polyline positions={path} color="#16a34a" />
+                    {path.map((pos, idx) => (
+                      <Marker key={idx} position={pos}>
+                        <Popup>Step {idx + 1}</Popup>
+                      </Marker>
+                    ))}
+                  </>
+                )}
+              </MapContainer>
+            </div>
+          </motion.div>
+
+          {/* Timeline */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold text-foreground mb-6">Supply Chain Timeline</h3>
+            <div className="space-y-4">
+              {backendTrace.timeline.map((step, index) => (
+                <div key={index} className="flex items-start space-x-4">
+                  <div className="p-2 rounded-full bg-green-100 text-green-600"><CheckCircle className="h-4 w-4" /></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="font-medium text-foreground">{step.label}</p>
+                      <span className="text-sm text-muted-foreground">{new Date(step.date).toLocaleDateString()}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-1">{step.location}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </div>
     );
   }

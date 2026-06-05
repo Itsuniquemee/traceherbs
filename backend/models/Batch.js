@@ -196,7 +196,12 @@ const batchSchema = new mongoose.Schema({
         ref: 'User'
       },
       name: String,
-      location: String
+      location: String,
+      coordinates: {
+        latitude: Number,
+        longitude: Number,
+        accuracy: Number
+      }
     },
     date: {
       type: Date,
@@ -314,6 +319,52 @@ const batchSchema = new mongoose.Schema({
     type: String,
     uploadDate: { type: Date, default: Date.now },
     uploadedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
+  }],
+  // Geo-tagged raw collection events from field or wild collection
+  collectionEvents: [{
+    eventId: { type: String, index: true },
+    collectorType: { type: String, enum: ['farmer', 'wild_collector'], default: 'farmer' },
+    source: { type: String, enum: ['mobile', 'sms', 'iot', 'web'], default: 'mobile' },
+    capturedAt: { type: Date, default: Date.now },
+    coordinates: {
+      latitude: { type: Number, required: true },
+      longitude: { type: Number, required: true },
+      accuracy: Number
+    },
+    environment: {
+      temperatureC: Number,
+      humidityPct: Number,
+      soilMoisturePct: Number
+    },
+    quantity: {
+      amount: Number,
+      unit: { type: String, default: 'kg' }
+    },
+    notes: String,
+    attachments: [String],
+    // Simple on-ledger proof stub
+    ledger: {
+      txId: String,
+      hash: String,
+      timestamp: Date
+    }
+  }],
+  // QR Code tracking and analytics
+  scanCount: {
+    type: Number,
+    default: 0
+  },
+  lastScanned: {
+    type: Date
+  },
+  scanHistory: [{
+    timestamp: { type: Date, default: Date.now },
+    userAgent: String,
+    ip: String,
+    location: {
+      latitude: Number,
+      longitude: Number
+    }
   }]
 }, {
   timestamps: true,

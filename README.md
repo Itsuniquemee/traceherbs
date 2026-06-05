@@ -1,57 +1,48 @@
 # HerbalTrace Botanical Traceability System
 
-This project provides end-to-end traceability for Ayurvedic herbs, including geo-tagged data capture, QR code labeling, RESTful APIs, and consumer-facing portals. Blockchain features are excluded in this version.
+End-to-end traceability for Ayurvedic herbs, including geo-tagged data capture, QR code labeling, RESTful APIs, and consumer-facing portals. This repository ships a Node.js/Express backend with MongoDB and a React frontend. It also exposes FHIR-style provenance bundles and geo-tagged collection events.
 
 ## Structure
-- `backend/` - Java Spring Boot REST API, FHIR-style models, QR code generation, reporting
-- `frontend/` - React web dashboard, mobile-friendly forms, consumer portal
+- `backend/` - Node.js/Express API (MongoDB), FHIR-style bundle export, QR generation, reporting
+- `frontend/` - React web dashboard, mobile-friendly forms, consumer portal with QR scan and interactive maps
 
-## Setup Instructions
+## Quick Start
 
-### Backend (Spring Boot)
-1. Install Java 17+ and Maven.
-2. Set up PostgreSQL and update `backend/src/main/resources/application.properties` with your DB credentials.
-3. From `backend/`, run:
+### Backend (Node.js + MongoDB)
+1. Install Node.js and npm
+2. Ensure MongoDB is running locally
+3. Copy env: `cp backend/.env.example backend/.env` and set JWT_SECRET, MONGODB_URI, etc.
+4. From `backend/`:
    ```sh
-   mvn spring-boot:run
+   npm install
+   npm run dev
    ```
-   This will auto-seed demo data for Ashwagandha.
+   API will start at `http://localhost:3001`.
 
 ### Frontend (React)
-1. Install Node.js and npm.
-2. From `frontend/`, run:
+1. From `frontend/`:
    ```sh
    npm install
    npm start
    ```
    The app runs at `http://localhost:3000`.
 
-### API Endpoints
-- `POST /api/collection` - Add collection event
-- `GET /api/collection` - List collection events
-- `POST /api/qualitytest` - Add quality test
-- `GET /api/qualitytest` - List quality tests
-- `POST /api/processingstep` - Add processing step
-- `GET /api/processingstep` - List processing steps
-- `GET /api/provenance/{batchId}` - Lookup provenance by batch/QR code
+### Key APIs
+- `GET /api/health` – health status
+- `POST /api/collection` – record geo-tagged collection event
+- `GET /api/collection?batchId=...` – list collection events
+- `GET /api/trace/:batchId` – full trace view with geo path
+- `GET /api/fhir/bundle/:batchId` – FHIR-style provenance bundle for the batch
 
-## QR Code Features
-- Each batch can be assigned a unique QR code (generated in backend)
-- Consumer portal allows lookup by QR code or batch ID
-- For hackathon: Use the QR code libraries in backend (`zxing`) and frontend (`qrcode.react`) for generation and display
+## QR Code
+- Backend generates minimal QR payloads that deep link to `/trace/:id`
+- Frontend uses an optimized QR service; TraceViewer fetches from backend when available and falls back to local storage for demo traces
 
-## Further Enhancements
-- Add interactive maps (React Leaflet) for geo-tagged events
-- Implement offline data entry and sync for mobile collectors
-- Add authentication and role-based access (Spring Security)
-- Extend FHIR-style models for richer metadata
-- Add export/compliance reporting modules
-- Simulate recall and notification flows
-- Polish UI for hackathon demo (charts, maps, QR scan)
+## Enhancements Included
+- Interactive maps (React Leaflet) for geo-tagged journeys
+- FHIR-style bundle export for provenance and audit
+- Role-based endpoints, rate limiting, Helmet, validation
+- Docs and full integration server entrypoint
 
-## Demo Data
-- Ashwagandha collection, quality test, and processing step are auto-seeded
-- View in dashboard and consumer portal
-
-## Contact & Contribution
-- Fork, extend, and contribute for hackathons or real-world pilots!
+## Contributing
+- Fork and open PRs for new features (Hyperledger integration stubs included under `backend/services/ledger.js`)
